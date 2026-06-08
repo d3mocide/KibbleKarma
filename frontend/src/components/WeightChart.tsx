@@ -35,15 +35,15 @@ export default function WeightChart({ pet, weights }: { pet: Pet; weights: Weigh
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: -16, bottom: 0 }}>
         <defs>
           <linearGradient id="weightFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#7FB3AE" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="#7FB3AE" stopOpacity={0} />
+            <stop offset="0%" stopColor="#81B29A" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="#81B29A" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#EFE6D6" />
-        <XAxis dataKey="date" tick={{ fill: "#5B4A42", fontSize: 12 }} />
+        <XAxis dataKey="date" tick={{ fill: "#3D405B", fontSize: 12 }} />
         <YAxis
           domain={[Math.floor(min - padding), Math.ceil(max + padding)]}
-          tick={{ fill: "#5B4A42", fontSize: 12 }}
+          tick={{ fill: "#3D405B", fontSize: 12 }}
           unit=" kg"
           width={56}
         />
@@ -51,22 +51,22 @@ export default function WeightChart({ pet, weights }: { pet: Pet; weights: Weigh
           <ReferenceArea
             y1={pet.idealWeightMinKg}
             y2={pet.idealWeightMaxKg}
-            fill="#F5D8CE"
-            fillOpacity={0.4}
-            label={{ value: "ideal range", fill: "#5B4A42", fontSize: 11, position: "insideTopRight" }}
+            fill="#FDF3EF"
+            fillOpacity={0.7}
+            label={{ value: "ideal range", fill: "#B95A40", fontSize: 11, position: "insideTopRight" }}
           />
         )}
         <Tooltip
-          contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(91,74,66,0.15)" }}
+          contentStyle={{ borderRadius: 16, border: "none", backgroundColor: "#FFFFFF", boxShadow: "0 4px 20px rgba(91,74,66,0.08)" }}
           formatter={(value: number) => [`${value} kg`, "Weight"]}
         />
         <Area type="monotone" dataKey="weight" stroke="none" fill="url(#weightFill)" />
         <Line
           type="monotone"
           dataKey="weight"
-          stroke="#4F8A84"
+          stroke="#81B29A"
           strokeWidth={3}
-          dot={{ r: 4, fill: "#4F8A84" }}
+          dot={{ r: 4, fill: "#6FA088" }}
           activeDot={{ r: 6 }}
         />
       </ComposedChart>

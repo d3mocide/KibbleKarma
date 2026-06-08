@@ -2,8 +2,9 @@ import { useEffect, useState, type FormEvent } from "react";
 import { dietApi, foodsApi } from "../api/endpoints";
 import { apiError } from "../api/client";
 import type { Food, PetFoodProfile } from "../api/types";
-import { EmptyState, ErrorBanner, Modal, Spinner } from "./ui";
+import { EmptyState, ErrorBanner, Modal, Spinner, Button, Chip, TextField, SelectField } from "./ui";
 import { num } from "../utils/format";
+import { Plus, Trash2 } from "lucide-react";
 
 export default function DietTab({ petId }: { petId: string }) {
   const [profiles, setProfiles] = useState<PetFoodProfile[]>([]);
@@ -76,15 +77,16 @@ export default function DietTab({ petId }: { petId: string }) {
     <div className="space-y-4">
       <ErrorBanner message={error} />
       <div className="flex justify-end">
-        <button className="btn-primary" onClick={() => setOpen(true)}>
-          + Add food for this pet
-        </button>
+        <Button onClick={() => setOpen(true)} className="flex items-center gap-1.5">
+          <Plus className="h-4.5 w-4.5" />
+          <span>Add food</span>
+        </Button>
       </div>
 
       {profiles.length === 0 ? (
         <EmptyState title="No diet set up yet" hint="Add foods this pet eats to plan their daily portions." />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {profiles.map((p) => {
             const perMeal =
               p.targetDailyGrams && p.mealsPerDay ? p.targetDailyGrams / p.mealsPerDay : null;
@@ -92,116 +94,115 @@ export default function DietTab({ petId }: { petId: string }) {
               <div key={p.id} className="card">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-extrabold text-cocoa">{p.food.name}</h3>
-                    {p.food.brand && <p className="text-sm text-cocoa/60">{p.food.brand}</p>}
+                    <h3 className="font-extrabold text-charcoal-900">{p.food.name}</h3>
+                    {p.food.brand && <p className="text-sm text-text-muted">{p.food.brand}</p>}
                   </div>
-                  {p.isPrimary && <span className="chip bg-teal-soft/30 text-teal-deep">Primary</span>}
+                  {p.isPrimary && <Chip tone="sage">Primary</Chip>}
                 </div>
-                <dl className="mt-3 grid grid-cols-3 gap-2 text-sm">
+                <dl className="mt-4 grid grid-cols-3 gap-2 text-sm">
                   <div>
-                    <dt className="text-cocoa/50">Daily kcal</dt>
-                    <dd className="font-bold">{num(p.targetDailyKcal)}</dd>
+                    <dt className="text-text-faint">Daily kcal</dt>
+                    <dd className="font-bold text-charcoal-900">{num(p.targetDailyKcal)}</dd>
                   </div>
                   <div>
-                    <dt className="text-cocoa/50">Daily g</dt>
-                    <dd className="font-bold">{num(p.targetDailyGrams)}</dd>
+                    <dt className="text-text-faint">Daily g</dt>
+                    <dd className="font-bold text-charcoal-900">{num(p.targetDailyGrams)}</dd>
                   </div>
                   <div>
-                    <dt className="text-cocoa/50">Meals/day</dt>
-                    <dd className="font-bold">{num(p.mealsPerDay, 1)}</dd>
+                    <dt className="text-text-faint">Meals/day</dt>
+                    <dd className="font-bold text-charcoal-900">{num(p.mealsPerDay, 1)}</dd>
                   </div>
                 </dl>
                 {perMeal && (
-                  <p className="mt-2 rounded-lg bg-sand/60 px-3 py-1.5 text-sm text-cocoa/80">
+                  <p className="mt-3 rounded-md bg-oat-200/60 px-3 py-2 text-sm text-charcoal-700">
                     ≈ <b>{num(perMeal, 1)} g</b> per meal
                   </p>
                 )}
-                <button
-                  onClick={() => remove(p.id)}
-                  className="mt-3 text-xs font-semibold text-cocoa/50 hover:text-red-500"
-                >
-                  Remove
-                </button>
+                <div className="mt-4 flex justify-between items-center">
+                  {p.notes ? <span className="text-xs italic text-text-muted">{p.notes}</span> : <span />}
+                  <button
+                    onClick={() => remove(p.id)}
+                    className="text-text-faint hover:text-alert transition p-1"
+                    title="Remove"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
       )}
 
-      <Modal open={open} onClose={() => setOpen(false)} title="Add food for this pet">
+      <Modal open={open} onClose={() => setOpen(false)} title="Add food">
         <form onSubmit={submit} className="space-y-4">
           <ErrorBanner message={formError} />
-          <div>
-            <label className="label">Food</label>
-            <select
-              className="input"
-              value={form.foodId}
-              onChange={(e) => setForm({ ...form, foodId: e.target.value })}
-              required
-            >
-              {foods.length === 0 && <option value="">No foods yet — add one on the Foods page</option>}
-              {foods.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.name}
-                  {f.brand ? ` (${f.brand})` : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-cocoa/80">
+          
+          <SelectField
+            label="Food"
+            value={form.foodId}
+            onChange={(e) => setForm({ ...form, foodId: e.target.value })}
+            required
+          >
+            {foods.length === 0 && <option value="">No foods yet — add one on the foods page</option>}
+            {foods.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+                {f.brand ? ` (${f.brand})` : ""}
+              </option>
+            ))}
+          </SelectField>
+
+          <label className="flex items-center gap-2 text-sm font-bold text-text-body cursor-pointer">
             <input
               type="checkbox"
+              className="rounded-md border-border-input bg-surface-app text-primary focus:ring-primary/32"
               checked={form.isPrimary}
               onChange={(e) => setForm({ ...form, isPrimary: e.target.checked })}
             />
-            This is their main diet (not a treat)
+            <span>This is their main diet (not a treat)</span>
           </label>
+
           <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="label">Daily kcal</label>
-              <input
-                type="number"
-                min="0"
-                className="input"
-                value={form.targetDailyKcal}
-                onChange={(e) => setForm({ ...form, targetDailyKcal: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="label">Daily grams</label>
-              <input
-                type="number"
-                min="0"
-                className="input"
-                value={form.targetDailyGrams}
-                onChange={(e) => setForm({ ...form, targetDailyGrams: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="label">Meals/day</label>
-              <input
-                type="number"
-                min="0"
-                step="0.5"
-                className="input"
-                value={form.mealsPerDay}
-                onChange={(e) => setForm({ ...form, mealsPerDay: e.target.value })}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="label">Notes</label>
-            <input
-              className="input"
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            <TextField
+              type="number"
+              min="0"
+              label="Daily kcal"
+              value={form.targetDailyKcal}
+              onChange={(e) => setForm({ ...form, targetDailyKcal: e.target.value })}
+            />
+            
+            <TextField
+              type="number"
+              min="0"
+              label="Daily grams"
+              value={form.targetDailyGrams}
+              onChange={(e) => setForm({ ...form, targetDailyGrams: e.target.value })}
+            />
+            
+            <TextField
+              type="number"
+              min="0"
+              step="0.5"
+              label="Meals/day"
+              value={form.mealsPerDay}
+              onChange={(e) => setForm({ ...form, mealsPerDay: e.target.value })}
             />
           </div>
-          <button className="btn-primary w-full" disabled={submitting || foods.length === 0}>
-            {submitting ? "Adding..." : "Add to diet"}
-          </button>
+
+          <TextField
+            label="Notes"
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            placeholder="e.g. wet food in morning, dry at night"
+          />
+
+          <Button type="submit" loading={submitting} fullWidth disabled={foods.length === 0}>
+            Add to diet
+          </Button>
         </form>
       </Modal>
     </div>
   );
 }
+

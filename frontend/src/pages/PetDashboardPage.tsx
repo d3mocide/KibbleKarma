@@ -18,7 +18,7 @@ import type {
   WeightLog,
   WeightTrend,
 } from "../api/types";
-import { ErrorBanner, Modal, Spinner, speciesIcon } from "../components/ui";
+import { ErrorBanner, Modal, Spinner, Avatar, Button, Chip, StatMeter } from "../components/ui";
 import WeightChart from "../components/WeightChart";
 import DietTab from "../components/DietTab";
 import PetForm, { petFormToPayload, type PetFormValues } from "../components/PetForm";
@@ -31,17 +31,46 @@ import {
   type WeightFormValues,
 } from "../components/LogForms";
 import { ageFromDob, formatDateTime, num, todayStr } from "../utils/format";
+import { 
+  ArrowLeft, 
+  Bone, 
+  Scale, 
+  NotebookPen, 
+  TrendingUp, 
+  TrendingDown, 
+  Download, 
+  Trash2,
+  Stethoscope,
+  Thermometer,
+  Pill,
+  FlaskConical
+} from "lucide-react";
 
 type Tab = "overview" | "diet" | "meals" | "weights" | "health";
 type LogModal = null | "meal" | "weight" | "event" | "editPet";
 
-const eventLabels: Record<string, string> = {
-  vet_visit: "🩺 Vet visit",
-  symptom: "🤒 Symptom",
-  medication: "💊 Medication",
-  lab_result: "🧪 Lab result",
-  other: "📝 Note",
+const eventText: Record<string, string> = {
+  vet_visit: "Vet visit",
+  symptom: "Symptom",
+  medication: "Medication",
+  lab_result: "Lab result",
+  other: "Note",
 };
+
+export function HealthEventIcon({ type, className = "h-4.5 w-4.5" }: { type: string; className?: string }) {
+  switch (type) {
+    case "vet_visit":
+      return <Stethoscope className={className} />;
+    case "symptom":
+      return <Thermometer className={className} />;
+    case "medication":
+      return <Pill className={className} />;
+    case "lab_result":
+      return <FlaskConical className={className} />;
+    default:
+      return <NotebookPen className={className} />;
+  }
+}
 
 export default function PetDashboardPage() {
   const { petId = "" } = useParams();
@@ -181,7 +210,7 @@ export default function PetDashboardPage() {
   };
 
   const deletePet = async () => {
-    if (!confirm("Delete this pet and all their logs? This can't be undone.")) return;
+    if (!confirm("Delete this buddy and all their logs? This can't be undone.")) return;
     await petsApi.remove(petId);
     navigate("/");
   };
@@ -193,7 +222,7 @@ export default function PetDashboardPage() {
         const url = URL.createObjectURL(res.data as Blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${pet?.name ?? "pet"}-${kind}.csv`;
+        a.download = `${pet?.name ?? "buddy"}-${kind}.csv`;
         a.click();
         URL.revokeObjectURL(url);
       })
@@ -205,18 +234,18 @@ export default function PetDashboardPage() {
   if (!pet) return null;
 
   const remaining = summary?.remainingKcal ?? null;
-  let trackMsg = "Log a nibble to start today's tally.";
-  let trackTone = "bg-sand/60 text-cocoa";
+  let trackMsg = "Log a meal to start today's tally.";
+  let trackTone = "bg-oat-200 text-charcoal-700";
   if (summary && summary.targetKcal != null && remaining != null) {
     if (remaining > summary.targetKcal * 0.15) {
-      trackMsg = `A few more nibbles to go — ${num(remaining)} kcal left.`;
-      trackTone = "bg-teal-soft/20 text-teal-deep";
+      trackMsg = `A few more meals to go — ${num(remaining)} kcal left.`;
+      trackTone = "bg-butter-100 text-butter-600";
     } else if (remaining >= -summary.targetKcal * 0.05) {
-      trackMsg = "They're right on track! 🎯";
-      trackTone = "bg-teal-soft/30 text-teal-deep";
+      trackMsg = "They're right on track! 🎉";
+      trackTone = "bg-sage-100 text-sage-700";
     } else {
       trackMsg = `A little over today (${num(Math.abs(remaining))} kcal past target).`;
-      trackTone = "bg-blush/70 text-cocoa";
+      trackTone = "bg-terracotta-50 text-alert";
     }
   } else if (summary && summary.totalKcal > 0) {
     trackMsg = `${num(summary.totalKcal)} kcal logged today. Set a daily target to track progress.`;
@@ -225,24 +254,30 @@ export default function PetDashboardPage() {
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "diet", label: "Diet" },
-    { id: "meals", label: "Nibbles" },
+    { id: "meals", label: "Meals" },
     { id: "weights", label: "Weigh-ins" },
     { id: "health", label: "Health" },
   ];
 
   return (
     <div className="space-y-5">
-      <Link to="/" className="text-sm font-semibold text-teal-deep hover:underline">
-        ← Back to all pets
+      <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-hover transition">
+        <ArrowLeft className="h-4 w-4" />
+        <span>Back to all buddies</span>
       </Link>
 
       {/* Header */}
       <div className="card flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
-          <span className="text-5xl">{speciesIcon(pet.species)}</span>
+          <Avatar 
+            species={pet.species} 
+            tone={pet.species === "dog" ? "terracotta" : pet.species === "cat" ? "sage" : "butter"} 
+            size={56} 
+            className="flex-shrink-0" 
+          />
           <div>
-            <h1 className="text-2xl font-extrabold text-cocoa">{pet.name}</h1>
-            <p className="capitalize text-cocoa/60">
+            <h1 className="text-2xl font-extrabold text-charcoal-900 tracking-tight">{pet.name}</h1>
+            <p className="capitalize text-charcoal-500">
               {pet.species}
               {pet.breed ? ` · ${pet.breed}` : ""}
               {ageFromDob(pet.dateOfBirth) ? ` · ${ageFromDob(pet.dateOfBirth)}` : ""}
@@ -251,38 +286,41 @@ export default function PetDashboardPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="btn-secondary" onClick={() => setModal("editPet")}>
+          <Button variant="secondary" onClick={() => setModal("editPet")}>
             Edit
-          </button>
-          <button className="btn-ghost text-red-400 hover:bg-blush/40" onClick={deletePet}>
+          </Button>
+          <Button variant="ghost" className="text-alert hover:bg-terracotta-50" onClick={deletePet}>
             Delete
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Quick log buttons */}
-      <div className="flex flex-wrap gap-2">
-        <button className="btn-primary" onClick={() => setModal("meal")}>
-          🍖 Log a nibble
-        </button>
-        <button className="btn-secondary" onClick={() => setModal("weight")}>
-          ⚖️ Log a weigh-in
-        </button>
-        <button className="btn-secondary" onClick={() => setModal("event")}>
-          📝 Log a health note
-        </button>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <Button onClick={() => setModal("meal")} className="flex items-center justify-center gap-1.5 w-full">
+          <Bone className="h-4.5 w-4.5" />
+          <span>Log a meal</span>
+        </Button>
+        <Button variant="secondary" onClick={() => setModal("weight")} className="flex items-center justify-center gap-1.5 w-full">
+          <Scale className="h-4.5 w-4.5" />
+          <span>Log a weigh-in</span>
+        </Button>
+        <Button variant="secondary" onClick={() => setModal("event")} className="flex items-center justify-center gap-1.5 w-full">
+          <NotebookPen className="h-4.5 w-4.5" />
+          <span>Log a health note</span>
+        </Button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto border-b border-sand">
+      <div className="flex gap-6 overflow-x-auto border-b border-oat-300 no-scrollbar">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`whitespace-nowrap px-4 py-2 text-sm font-bold transition ${
+            className={`whitespace-nowrap pb-3 text-sm font-bold transition-all duration-200 border-b-2 -mb-[2px] ${
               tab === t.id
-                ? "border-b-2 border-teal-deep text-teal-deep"
-                : "text-cocoa/50 hover:text-cocoa"
+                ? "border-primary text-primary"
+                : "border-transparent text-text-muted hover:text-charcoal-900"
             }`}
           >
             {t.label}
@@ -296,53 +334,47 @@ export default function PetDashboardPage() {
         <div className="grid gap-5 lg:grid-cols-3">
           <div className="card lg:col-span-2">
             <div className="mb-2 flex items-center justify-between">
-              <h2 className="font-extrabold text-cocoa">Weight trend</h2>
+              <h2 className="font-extrabold text-charcoal-900">Weight trend</h2>
               {trend && (
-                <span className="chip bg-sand text-cocoa/70">
-                  {trend.changeKg >= 0 ? "▲" : "▼"} {num(Math.abs(trend.changeKg), 2)} kg / {trend.days}d
-                </span>
+                <Chip tone="neutral" className="flex items-center gap-1">
+                  {trend.changeKg >= 0 ? <TrendingUp className="h-3.5 w-3.5 text-sage-600" /> : <TrendingDown className="h-3.5 w-3.5 text-terracotta-500" />}
+                  <span>{num(Math.abs(trend.changeKg), 2)} kg / {trend.days}d</span>
+                </Chip>
               )}
             </div>
             <WeightChart pet={pet} weights={weights} />
           </div>
 
           <div className="card">
-            <h2 className="font-extrabold text-cocoa">Today's Nibbles</h2>
-            <div className="mt-3 space-y-2">
+            <h2 className="font-extrabold text-charcoal-900">Today's meals</h2>
+            <div className="mt-4 space-y-3">
               <div className="flex items-baseline justify-between">
-                <span className="text-cocoa/60">Calories</span>
-                <span className="text-2xl font-extrabold text-teal-deep">
+                <span className="text-text-muted">Calories</span>
+                <span className="text-2xl font-extrabold text-primary">
                   {num(summary?.totalKcal)}
                   {summary?.targetKcal != null && (
-                    <span className="text-base font-semibold text-cocoa/40">
+                    <span className="text-base font-semibold text-text-faint">
                       {" "}
                       / {num(summary.targetKcal)}
                     </span>
                   )}
                 </span>
               </div>
-              {summary?.targetKcal != null && (
-                <div className="h-2.5 w-full overflow-hidden rounded-full bg-sand">
-                  <div
-                    className="h-full rounded-full bg-teal-soft transition-all"
-                    style={{
-                      width: `${Math.min(100, (summary.totalKcal / summary.targetKcal) * 100)}%`,
-                    }}
-                  />
-                </div>
-              )}
+              
+              <StatMeter value={summary?.totalKcal ?? 0} max={summary?.targetKcal ?? null} />
+
               <div className="flex items-baseline justify-between">
-                <span className="text-cocoa/60">Grams</span>
-                <span className="font-bold">{num(summary?.totalGrams, 1)} g</span>
+                <span className="text-text-muted">Grams</span>
+                <span className="font-bold text-charcoal-900">{num(summary?.totalGrams, 1)} g</span>
               </div>
             </div>
-            <p className={`mt-3 rounded-xl px-3 py-2 text-sm font-semibold ${trackTone}`}>{trackMsg}</p>
+            <p className={`mt-4 rounded-md px-3 py-2 text-sm font-semibold ${trackTone}`}>{trackMsg}</p>
             {summary && summary.breakdown.length > 0 && (
-              <ul className="mt-3 space-y-1 text-sm">
+              <ul className="mt-4 space-y-1.5 text-sm">
                 {summary.breakdown.map((b) => (
-                  <li key={b.foodId} className="flex justify-between text-cocoa/70">
+                  <li key={b.foodId} className="flex justify-between text-charcoal-700">
                     <span>{b.foodName}</span>
-                    <span className="font-semibold">{num(b.kcal)} kcal</span>
+                    <span className="font-bold">{num(b.kcal)} kcal</span>
                   </li>
                 ))}
               </ul>
@@ -350,18 +382,19 @@ export default function PetDashboardPage() {
           </div>
 
           <div className="card lg:col-span-3">
-            <h2 className="mb-3 font-extrabold text-cocoa">Recent health notes</h2>
+            <h2 className="mb-3 font-extrabold text-charcoal-900">Recent health notes</h2>
             {events.length === 0 ? (
-              <p className="text-sm text-cocoa/50">No notes yet.</p>
+              <p className="text-sm text-text-muted">No notes yet.</p>
             ) : (
               <ul className="space-y-2">
                 {events.slice(0, 5).map((e) => (
-                  <li key={e.id} className="flex items-center justify-between rounded-xl bg-sand/40 px-3 py-2">
-                    <div>
-                      <span className="font-semibold text-cocoa">{eventLabels[e.type] ?? e.type}</span>
-                      <span className="ml-2 text-cocoa/70">{e.title}</span>
+                  <li key={e.id} className="flex items-center justify-between rounded-md bg-oat-200/50 px-3 py-2 text-sm">
+                    <div className="flex items-center gap-2.5">
+                      <HealthEventIcon type={e.type} className="h-4.5 w-4.5 text-sage-600" />
+                      <span className="font-bold text-charcoal-900">{eventText[e.type] ?? e.type}</span>
+                      <span className="text-text-muted">{e.title}</span>
                     </div>
-                    <span className="text-xs text-cocoa/50">{formatDateTime(e.eventAt)}</span>
+                    <span className="text-xs text-text-faint">{formatDateTime(e.eventAt)}</span>
                   </li>
                 ))}
               </ul>
@@ -375,35 +408,36 @@ export default function PetDashboardPage() {
       {tab === "meals" && (
         <div className="card">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-extrabold text-cocoa">Nibble history</h2>
-            <button className="btn-ghost text-sm" onClick={() => downloadCsv("meals")}>
-              ⬇ Export CSV
-            </button>
+            <h2 className="font-extrabold text-charcoal-900">Meal history</h2>
+            <Button variant="ghost" size="sm" onClick={() => downloadCsv("meals")} className="flex items-center gap-1.5 text-xs">
+              <Download className="h-4 w-4" />
+              <span>Export CSV</span>
+            </Button>
           </div>
           {meals.length === 0 ? (
-            <p className="text-sm text-cocoa/50">No nibbles logged yet.</p>
+            <p className="text-sm text-text-muted">No meals logged yet.</p>
           ) : (
-            <ul className="divide-y divide-sand">
+            <ul className="divide-y divide-oat-300">
               {meals.map((m) => (
                 <li key={m.id} className="flex items-center justify-between py-2.5">
                   <div>
-                    <p className="font-semibold text-cocoa">{m.food.name}</p>
-                    <p className="text-xs text-cocoa/50">
+                    <p className="font-bold text-charcoal-900">{m.food.name}</p>
+                    <p className="text-xs text-text-muted">
                       {formatDateTime(m.loggedAt)} ·{" "}
                       {m.amountGrams ? `${num(m.amountGrams, 1)} g` : `${num(m.amountServings, 1)} servings`}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-teal-deep">{num(m.computedKcal, 1)} kcal</span>
+                  <div className="flex items-center gap-4">
+                    <span className="font-bold text-primary">{num(m.computedKcal, 1)} kcal</span>
                     <button
                       onClick={async () => {
                         await mealsApi.remove(m.id);
                         await load();
                       }}
-                      className="text-cocoa/40 hover:text-red-500"
+                      className="text-text-faint hover:text-alert transition"
                       title="Delete"
                     >
-                      ✕
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </li>
@@ -416,20 +450,21 @@ export default function PetDashboardPage() {
       {tab === "weights" && (
         <div className="card">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-extrabold text-cocoa">Weigh-in history</h2>
-            <button className="btn-ghost text-sm" onClick={() => downloadCsv("weights")}>
-              ⬇ Export CSV
-            </button>
+            <h2 className="font-extrabold text-charcoal-900">Weigh-in history</h2>
+            <Button variant="ghost" size="sm" onClick={() => downloadCsv("weights")} className="flex items-center gap-1.5 text-xs">
+              <Download className="h-4 w-4" />
+              <span>Export CSV</span>
+            </Button>
           </div>
           {weights.length === 0 ? (
-            <p className="text-sm text-cocoa/50">No weigh-ins yet.</p>
+            <p className="text-sm text-text-muted">No weigh-ins yet.</p>
           ) : (
-            <ul className="divide-y divide-sand">
+            <ul className="divide-y divide-oat-300">
               {[...weights].reverse().map((w) => (
                 <li key={w.id} className="flex items-center justify-between py-2.5">
                   <div>
-                    <p className="font-semibold text-cocoa">{num(w.weightKg, 2)} kg</p>
-                    <p className="text-xs text-cocoa/50">
+                    <p className="font-bold text-charcoal-900">{num(w.weightKg, 2)} kg</p>
+                    <p className="text-xs text-text-muted">
                       {formatDateTime(w.weighedAt)}
                       {w.bodyConditionScore ? ` · BCS ${w.bodyConditionScore}` : ""}
                     </p>
@@ -439,10 +474,10 @@ export default function PetDashboardPage() {
                       await weightsApi.remove(w.id);
                       await load();
                     }}
-                    className="text-cocoa/40 hover:text-red-500"
+                    className="text-text-faint hover:text-alert transition"
                     title="Delete"
                   >
-                    ✕
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </li>
               ))}
@@ -453,30 +488,33 @@ export default function PetDashboardPage() {
 
       {tab === "health" && (
         <div className="card">
-          <h2 className="mb-3 font-extrabold text-cocoa">Health timeline</h2>
+          <h2 className="mb-3 font-extrabold text-charcoal-900">Health timeline</h2>
           {events.length === 0 ? (
-            <p className="text-sm text-cocoa/50">No health notes yet.</p>
+            <p className="text-sm text-text-muted">No health notes yet.</p>
           ) : (
             <ul className="space-y-3">
               {events.map((e) => (
-                <li key={e.id} className="rounded-xl bg-sand/40 p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-cocoa">{eventLabels[e.type] ?? e.type}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-cocoa/50">{formatDateTime(e.eventAt)}</span>
+                <li key={e.id} className="rounded-md bg-oat-200/50 p-4">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="flex items-center gap-1.5 font-bold text-charcoal-900">
+                      <HealthEventIcon type={e.type} className="h-4.5 w-4.5 text-sage-600" />
+                      <span>{eventText[e.type] ?? e.type}</span>
+                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-text-faint">{formatDateTime(e.eventAt)}</span>
                       <button
                         onClick={async () => {
                           await eventsApi.remove(e.id);
                           await load();
                         }}
-                        className="text-cocoa/40 hover:text-red-500"
+                        className="text-text-faint hover:text-alert transition"
                       >
-                        ✕
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
-                  <p className="font-semibold text-cocoa">{e.title}</p>
-                  {e.description && <p className="text-sm text-cocoa/70">{e.description}</p>}
+                  <p className="font-bold text-charcoal-900">{e.title}</p>
+                  {e.description && <p className="mt-1 text-sm text-text-muted leading-relaxed">{e.description}</p>}
                 </li>
               ))}
             </ul>
@@ -485,10 +523,10 @@ export default function PetDashboardPage() {
       )}
 
       {/* Modals */}
-      <Modal open={modal === "meal"} onClose={closeModal} title="Log a nibble">
+      <Modal open={modal === "meal"} onClose={closeModal} title="Log a meal">
         <MealForm foods={petFoods} onSubmit={logMeal} submitting={submitting} error={formError} />
         {computedHint && (
-          <p className="mt-3 rounded-xl bg-teal-soft/20 px-3 py-2 text-sm font-semibold text-teal-deep">
+          <p className="mt-3 rounded-md bg-sage-100 px-3 py-2 text-sm font-semibold text-sage-700">
             {computedHint} Today's total: {num(summary?.totalKcal)} kcal.
           </p>
         )}
@@ -505,3 +543,4 @@ export default function PetDashboardPage() {
     </div>
   );
 }
+

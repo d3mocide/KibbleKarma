@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { petsApi } from "../api/endpoints";
 import { apiError } from "../api/client";
 import type { Pet } from "../api/types";
-import { EmptyState, ErrorBanner, Modal, Spinner, speciesIcon } from "../components/ui";
+import { EmptyState, ErrorBanner, Modal, Spinner, Avatar, Button } from "../components/ui";
 import PetForm, { petFormToPayload, type PetFormValues } from "../components/PetForm";
 import { ageFromDob, num } from "../utils/format";
+import { Plus } from "lucide-react";
 
 export default function PetsListPage() {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -46,14 +47,15 @@ export default function PetsListPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-cocoa">Your sleepy snackers</h1>
-          <p className="text-cocoa/60">Everyone you're keeping happy and healthy.</p>
+          <h1 className="text-2xl font-extrabold text-charcoal-900 tracking-tight">Your sleepy snackers</h1>
+          <p className="text-charcoal-500">Everyone you're keeping happy and healthy.</p>
         </div>
-        <button className="btn-primary" onClick={() => setModalOpen(true)}>
-          + Add a new buddy
-        </button>
+        <Button onClick={() => setModalOpen(true)} className="flex items-center justify-center gap-1.5 w-full sm:w-auto">
+          <Plus className="h-4.5 w-4.5" />
+          <span>Add a new buddy</span>
+        </Button>
       </div>
 
       <ErrorBanner message={error} />
@@ -63,31 +65,37 @@ export default function PetsListPage() {
       ) : pets.length === 0 ? (
         <EmptyState
           title="No buddies yet"
-          hint="Add your first furry friend to start logging nibbles and naps."
+          hint="Your pet is patiently waiting."
           action={
-            <button className="btn-primary mt-2" onClick={() => setModalOpen(true)}>
-              Add a new buddy
-            </button>
+            <Button onClick={() => setModalOpen(true)} className="flex items-center gap-1.5 mt-2">
+              <Plus className="h-4.5 w-4.5" />
+              <span>Add a new buddy</span>
+            </Button>
           }
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pets.map((pet) => (
-            <Link key={pet.id} to={`/pets/${pet.id}`} className="card hover:shadow-lg transition">
+            <Link key={pet.id} to={`/pets/${pet.id}`} className="card hover:shadow-cozy-lg transition duration-200">
               <div className="flex items-center gap-3">
-                <span className="text-4xl">{speciesIcon(pet.species)}</span>
+                <Avatar 
+                  species={pet.species} 
+                  tone={pet.species === "dog" ? "terracotta" : pet.species === "cat" ? "sage" : "butter"} 
+                  size={48} 
+                  className="flex-shrink-0" 
+                />
                 <div>
-                  <h2 className="text-lg font-extrabold text-cocoa">{pet.name}</h2>
-                  <p className="text-sm capitalize text-cocoa/60">
+                  <h2 className="text-lg font-extrabold text-charcoal-900 leading-tight">{pet.name}</h2>
+                  <p className="text-sm capitalize text-charcoal-500">
                     {pet.species}
                     {pet.breed ? ` · ${pet.breed}` : ""}
                     {ageFromDob(pet.dateOfBirth) ? ` · ${ageFromDob(pet.dateOfBirth)}` : ""}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 flex items-center justify-between rounded-xl bg-sand/60 px-3 py-2 text-sm">
-                <span className="text-cocoa/70">Last weigh-in</span>
-                <span className="font-bold text-teal-deep">
+              <div className="mt-4 flex items-center justify-between rounded-md bg-oat-200/60 px-3 py-2 text-sm text-text-muted">
+                <span>Last weigh-in</span>
+                <span className="font-bold text-terracotta-500">
                   {pet.lastWeight ? `${num(pet.lastWeight.weightKg, 2)} kg` : "—"}
                 </span>
               </div>

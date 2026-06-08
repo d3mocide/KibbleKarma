@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KibbleKarma — Brand Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---- Terracotta (primary) ---- */
+  --terracotta-700:#B95A40; --terracotta-600:#CF6A4C; --terracotta-500:#E07A5F;
+  --terracotta-400:#E89379; --terracotta-300:#F0B3A1; --terracotta-200:#F7D4C9;
+  --terracotta-100:#FBE8E1; --terracotta-50:#FDF3EF;
+  /* ---- Sage (secondary) ---- */
+  --sage-700:#5C8C74; --sage-600:#6FA088; --sage-500:#81B29A; --sage-400:#9AC2AE;
+  --sage-300:#B7D4C6; --sage-200:#D5E6DD; --sage-100:#E8F2EC; --sage-50:#F3F8F5;
+  /* ---- Butter (accent) ---- */
+  --butter-600:#E9B86A; --butter-500:#F2CC8F; --butter-400:#F6D9A8;
+  --butter-300:#FAE6C4; --butter-200:#FCF0DC; --butter-100:#FEF7EC;
+  /* ---- Oat / Cream ---- */
+  --oat-300:#EFE6D6; --oat-200:#F3EAD9; --oat-100:#FAF7F0; --oat-white:#FFFFFF;
+  /* ---- Charcoal ---- */
+  --charcoal-900:#2B2D40; --charcoal-700:#3D405B; --charcoal-500:#5B5E78; --charcoal-300:#8C8FA3;
+  /* ---- Status ---- */
+  --success:#6FA088; --success-soft:#E8F2EC; --caution:#E9B86A; --caution-soft:#FCF0DC;
+  --alert:#D97455; --alert-soft:#FBE8E1;
+  /* ---- Semantic ---- */
+  --color-primary:var(--terracotta-500); --color-primary-hover:var(--terracotta-600); --color-primary-press:var(--terracotta-700);
+  --color-secondary:var(--sage-500); --color-accent:var(--butter-500);
+  --surface-app:var(--oat-100); --surface-card:var(--oat-white); --surface-sunken:var(--oat-200); --surface-fill:var(--oat-200);
+  --text-strong:var(--charcoal-900); --text-body:var(--charcoal-700); --text-muted:var(--charcoal-500); --text-faint:var(--charcoal-300);
+  --text-on-primary:var(--oat-white); --text-link:var(--terracotta-600);
+  --border-soft:var(--oat-300); --border-input:var(--oat-200); --border-focus:var(--terracotta-400);
+  --ring-primary:rgba(224,122,95,0.32); --ring-sage:rgba(129,178,154,0.4);
+  /* Type */
+  --font-display:"Fredoka","Nunito",ui-rounded,system-ui,sans-serif;
+  --font-rounded:"Nunito",ui-rounded,system-ui,sans-serif;
+  --font-body:"Nunito",ui-rounded,system-ui,sans-serif;
+  /* Spacing */
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-5:1.25rem;
+  --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --space-12:3rem; --space-16:4rem;
+  /* Radii */
+  --radius-sm:.5rem; --radius-md:.75rem; --radius-lg:1rem; --radius-card:1.25rem; --radius-pill:9999px;
+  /* Shadows */
+  --shadow-cozy-sm:0 2px 10px rgba(91,74,66,.06);
+  --shadow-cozy:0 4px 20px rgba(91,74,66,.08);
+  --shadow-cozy-lg:0 10px 34px rgba(91,74,66,.14);
+  --shadow-press:inset 0 2px 6px rgba(91,74,66,.12);
+  /* Motion */
+  --ease-cozy:cubic-bezier(.22,.61,.36,1); --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+  --dur-fast:120ms; --dur-base:200ms; --dur-slow:320ms;
+  --container-max:64rem;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:84px;}
+body{
+  margin:0; background:var(--surface-app); color:var(--text-body);
+  font:400 1rem/1.5 var(--font-body);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+
+h1,h2,h3,h4{font-family:var(--font-rounded);font-weight:800;color:var(--text-strong);line-height:1.12;margin:0;}
+a{color:var(--text-link);text-decoration:none;}
+p{text-wrap:pretty;}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:var(--container-max);margin:0 auto;padding:0 var(--space-6);}
+section{padding:var(--space-16) 0;border-top:1px solid var(--border-soft);}
+section:first-of-type{border-top:none;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-family:var(--font-rounded);font-weight:800;font-size:.7rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--terracotta-500);
+  margin:0 0 var(--space-3);
+}
+.eyebrow::before{content:"";width:1.4rem;height:2px;border-radius:2px;background:var(--terracotta-300);}
+.sec-title{font-size:2rem;letter-spacing:-.02em;margin-bottom:var(--space-3);}
+.sec-lead{font-size:1.0625rem;color:var(--text-muted);max-width:42rem;line-height:1.6;margin:0 0 var(--space-8);}
+
+/* ---------- Sticky header ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(250,247,240,.86);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--oat-200);
+}
+.topbar-inner{max-width:var(--container-max);margin:0 auto;padding:.7rem var(--space-6);
+  display:flex;align-items:center;gap:var(--space-5);}
+.topbar .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--font-display);font-weight:600;font-size:1.15rem;}
+.topbar .brand b{color:var(--terracotta-500);font-weight:600;}
+.topbar .brand span{color:var(--charcoal-700);font-weight:600;}
+.topnav{display:flex;gap:.15rem;margin-left:auto;flex-wrap:wrap;}
+.topnav a{
+  font-family:var(--font-rounded);font-weight:700;font-size:.82rem;color:var(--text-muted);
+  padding:.4rem .7rem;border-radius:var(--radius-pill);transition:background var(--dur-base) var(--ease-cozy),color var(--dur-base);
+}
+.topnav a:hover{background:var(--oat-200);color:var(--charcoal-700);}
+@media (max-width:880px){ .topnav{display:none;} }
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:var(--space-16) 0 var(--space-12);
+  background:
+    radial-gradient(120% 90% at 85% -10%, var(--butter-200) 0%, transparent 55%),
+    radial-gradient(120% 100% at 0% 0%, var(--terracotta-50) 0%, transparent 50%);
+}
+.hero-lockup{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6);}
+.hero-lockup .hero-mark{width:clamp(72px,10vw,96px);height:auto;flex:none;}
+.hero-lockup .hero-wm{font-family:var(--font-display);font-weight:600;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-.01em;line-height:1;}
+.hero-lockup .hero-wm .k1{color:var(--terracotta-500);}
+.hero-lockup .hero-wm .k2{color:var(--charcoal-700);}
+.hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.05;letter-spacing:-.01em;color:var(--charcoal-900);max-width:18ch;}
+.hero .tagline{font-family:var(--font-display);font-weight:500;color:var(--terracotta-600);font-size:1.4rem;margin:var(--space-4) 0 var(--space-5);}
+.hero p.lede{font-size:1.125rem;line-height:1.65;color:var(--text-muted);max-width:46rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-8);}
+
+/* ---------- Pillars ---------- */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);}
+@media (max-width:760px){ .pillars{grid-template-columns:1fr;} }
+.pillar{
+  background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-cozy);
+  padding:var(--space-6);
+}
+.pillar .ic{
+  width:48px;height:48px;border-radius:var(--radius-pill);display:grid;place-items:center;
+  margin-bottom:var(--space-4);
+}
+.pillar .ic i{width:24px;height:24px;}
+.pillar h3{font-size:1.25rem;margin-bottom:.4rem;}
+.pillar .sub{font-family:var(--font-rounded);font-weight:700;font-size:.9rem;color:var(--terracotta-500);margin-bottom:.5rem;}
+.pillar p{font-size:.95rem;color:var(--text-muted);line-height:1.55;margin:0;}
+
+/* ---------- Generic card ---------- */
+.card{background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-cozy);padding:var(--space-6);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);}
+@media (max-width:760px){ .grid-2,.grid-3{grid-template-columns:1fr;} }
+
+/* ---------- Logo section ---------- */
+.logo-stage{
+  border-radius:var(--radius-card);padding:var(--space-10);display:grid;place-items:center;min-height:200px;
+}
+.logo-stage svg{max-width:100%;height:auto;}
+.swatch-note{font-family:"Nunito";font-size:.8rem;color:var(--text-muted);margin-top:var(--space-3);}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-6);}
+@media (max-width:680px){ .do-dont{grid-template-columns:1fr;} }
+.dd{border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);font-size:.92rem;line-height:1.5;}
+.dd b{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-rounded);font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;}
+.dd.do{background:var(--sage-50);color:var(--sage-700);} .dd.do b{color:var(--sage-600);}
+.dd.dont{background:var(--alert-soft);color:var(--terracotta-700);} .dd.dont b{color:var(--alert);}
+.dd ul{margin:0;padding-left:1.1rem;} .dd li{margin:.2rem 0;}
+
+/* ---------- Color ramps ---------- */
+.ramp{margin-bottom:var(--space-6);}
+.ramp-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:var(--space-2);}
+.ramp-head h4{font-size:1.05rem;}
+.ramp-head .role{font-size:.82rem;color:var(--text-muted);font-weight:700;font-family:var(--font-rounded);}
+.ramp-row{display:flex;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-cozy-sm);}
+.sw{flex:1;height:76px;display:flex;flex-direction:column;justify-content:flex-end;padding:.4rem .5rem;position:relative;}
+.sw .n{font-family:var(--font-rounded);font-weight:800;font-size:.7rem;line-height:1;}
+.sw .h{font-family:"Nunito";font-size:.62rem;opacity:.85;margin-top:.15rem;}
+.sw.brand::after{content:"●";position:absolute;top:.4rem;right:.45rem;font-size:.6rem;}
+.status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);}
+@media (max-width:680px){ .status-grid{grid-template-columns:1fr;} }
+.status-card{border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);}
+.status-card .dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:.5rem;vertical-align:-1px;}
+.status-card h4{font-size:.98rem;margin-bottom:.2rem;}
+.status-card p{font-size:.82rem;color:var(--text-muted);margin:.3rem 0 0;line-height:1.45;}
+.status-card code{font-family:"Nunito";font-weight:700;font-size:.78rem;color:var(--charcoal-700);}
+
+/* ---------- Type ---------- */
+.type-spec{border-radius:var(--radius-lg);padding:var(--space-6);background:var(--surface-card);box-shadow:var(--shadow-cozy);margin-bottom:var(--space-5);}
+.type-spec .meta{display:flex;gap:var(--space-4);flex-wrap:wrap;font-family:"Nunito";font-size:.78rem;color:var(--text-muted);margin-top:var(--space-3);}
+.type-spec .meta span{background:var(--oat-200);border-radius:var(--radius-pill);padding:.2rem .7rem;font-weight:700;}
+.scale-row{display:flex;align-items:baseline;gap:var(--space-4);padding:.55rem 0;border-bottom:1px solid var(--border-soft);}
+.scale-row:last-child{border-bottom:none;}
+.scale-row .tk{font-family:"Nunito";font-weight:700;font-size:.74rem;color:var(--terracotta-500);width:5.5rem;flex-shrink:0;}
+.scale-row .px{font-family:"Nunito";font-size:.72rem;color:var(--text-faint);width:3.5rem;flex-shrink:0;}
+.scale-row .demo{color:var(--charcoal-700);font-family:var(--font-rounded);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.weights{display:flex;flex-wrap:wrap;gap:var(--space-4);}
+.weight-chip{text-align:center;}
+.weight-chip .big{font-family:var(--font-rounded);font-size:2.2rem;color:var(--charcoal-900);line-height:1;}
+.weight-chip .lbl{font-family:"Nunito";font-size:.74rem;color:var(--text-muted);margin-top:.3rem;font-weight:700;}
+
+/* ---------- Tokens (spacing/radii/shadow/motion) ---------- */
+.tok-list{display:flex;flex-direction:column;gap:.65rem;}
+.tok-row{display:flex;align-items:center;gap:var(--space-4);}
+.tok-row .name{font-family:"Nunito";font-weight:700;font-size:.78rem;color:var(--charcoal-700);width:6rem;flex-shrink:0;}
+.tok-row .val{font-family:"Nunito";font-size:.74rem;color:var(--text-faint);width:3.5rem;flex-shrink:0;}
+.sbar{height:14px;border-radius:var(--radius-pill);background:var(--terracotta-300);}
+.radii-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);}
+@media (max-width:680px){ .radii-grid{grid-template-columns:repeat(2,1fr);} }
+.radii-cell{text-align:center;}
+.radii-cell .box{height:84px;background:var(--terracotta-100);border:2px solid var(--terracotta-300);margin-bottom:.5rem;}
+.radii-cell .name{font-family:"Nunito";font-weight:700;font-size:.76rem;color:var(--charcoal-700);}
+.radii-cell .val{font-family:"Nunito";font-size:.72rem;color:var(--text-faint);}
+.shadow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-5);}
+@media (max-width:680px){ .shadow-grid{grid-template-columns:repeat(2,1fr);} }
+.shadow-cell{text-align:center;}
+.shadow-cell .box{height:88px;background:var(--oat-white);border-radius:var(--radius-lg);margin-bottom:.6rem;}
+.shadow-cell .name{font-family:"Nunito";font-weight:700;font-size:.76rem;color:var(--charcoal-700);}
+.shadow-cell .val{font-family:"Nunito";font-size:.68rem;color:var(--text-faint);line-height:1.3;display:block;margin-top:.15rem;}
+.motion-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);}
+@media (max-width:680px){ .motion-grid{grid-template-columns:1fr;} }
+.motion-card{background:var(--oat-100);border-radius:var(--radius-lg);padding:var(--space-5);}
+.motion-track{height:36px;border-radius:var(--radius-pill);background:var(--oat-200);position:relative;margin:var(--space-3) 0;overflow:hidden;}
+.motion-dot{position:absolute;top:50%;left:6px;width:24px;height:24px;border-radius:50%;background:var(--terracotta-500);transform:translateY(-50%);}
+.motion-dot.cozy{animation:slide 1.8s var(--ease-cozy) infinite alternate;}
+.motion-dot.bounce{animation:slide 1.8s var(--ease-bounce) infinite alternate;}
+@keyframes slide{to{left:calc(100% - 30px);}}
+@media (prefers-reduced-motion:reduce){ .motion-dot.cozy,.motion-dot.bounce{animation:none;} }
+.dur-list{display:flex;gap:var(--space-4);flex-wrap:wrap;margin-top:.5rem;}
+.dur-list span{background:var(--oat-200);border-radius:var(--radius-pill);padding:.25rem .8rem;font-family:"Nunito";font-weight:700;font-size:.78rem;color:var(--charcoal-700);}
+
+/* ---------- Iconography ---------- */
+.icon-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-4);}
+@media (max-width:760px){ .icon-grid{grid-template-columns:repeat(4,1fr);} }
+@media (max-width:480px){ .icon-grid{grid-template-columns:repeat(3,1fr);} }
+.icon-cell{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:var(--space-4) var(--space-2);background:var(--oat-100);border-radius:var(--radius-md);}
+.icon-cell i{width:26px;height:26px;color:var(--charcoal-700);}
+.icon-cell.terra i{color:var(--terracotta-500);} .icon-cell.sage i{color:var(--sage-600);}
+.icon-cell .nm{font-family:"Nunito";font-size:.68rem;color:var(--text-muted);font-weight:700;text-align:center;}
+.icon-group-title{font-family:var(--font-rounded);font-weight:800;font-size:.82rem;color:var(--charcoal-700);margin:var(--space-6) 0 var(--space-3);letter-spacing:.02em;}
+
+/* ---------- Voice ---------- */
+.lex-table{width:100%;border-collapse:collapse;background:var(--surface-card);border-radius:var(--radius-card);overflow:hidden;box-shadow:var(--shadow-cozy);}
+.lex-table th,.lex-table td{text-align:left;padding:.8rem var(--space-5);font-size:.92rem;}
+.lex-table thead th{background:var(--oat-200);font-family:var(--font-rounded);font-weight:800;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--charcoal-500);}
+.lex-table tbody tr{border-top:1px solid var(--border-soft);}
+.lex-table td.plain{color:var(--text-muted);width:34%;}
+.lex-table td.kk{color:var(--charcoal-700);font-weight:600;}
+.voice-attrs{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-8);}
+.voice-attrs .a{background:var(--terracotta-100);color:var(--terracotta-700);border-radius:var(--radius-pill);padding:.4rem .9rem;font-family:var(--font-rounded);font-weight:800;font-size:.82rem;}
+.tone-pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-6);}
+@media (max-width:680px){ .tone-pair{grid-template-columns:1fr;} }
+.tone-col{border-radius:var(--radius-lg);padding:var(--space-5);}
+.tone-col.say{background:var(--sage-50);} .tone-col.dont{background:var(--alert-soft);}
+.tone-col h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-3);display:flex;align-items:center;gap:.4rem;}
+.tone-col.say h4{color:var(--sage-600);} .tone-col.dont h4{color:var(--alert);}
+.tone-col p{font-size:.95rem;line-height:1.5;margin:.5rem 0;color:var(--charcoal-700);}
+.tone-col.dont p{color:var(--charcoal-500);text-decoration:line-through;text-decoration-color:var(--terracotta-300);}
+
+/* ---------- Components ---------- */
+.comp-block{margin-bottom:var(--space-8);}
+.comp-block h3{font-size:1.15rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;}
+.comp-block .desc{font-size:.92rem;color:var(--text-muted);margin:0 0 var(--space-4);max-width:44rem;line-height:1.5;}
+.demo-stage{background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-cozy);padding:var(--space-6);display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:center;}
+
+/* buttons */
+.kk-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:none;border-radius:var(--radius-pill);
+  padding:.5rem 1rem;font-family:var(--font-rounded);font-weight:700;font-size:1rem;cursor:pointer;
+  transition:background var(--dur-base) var(--ease-cozy),transform var(--dur-fast) var(--ease-cozy);}
+.kk-btn i{width:18px;height:18px;}
+.kk-btn:active{transform:translateY(1px) scale(.99);}
+.kk-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring-primary);}
+.kk-btn:disabled{opacity:.5;cursor:not-allowed;}
+.kk-btn-primary{background:var(--color-primary);color:var(--text-on-primary);}
+.kk-btn-primary:hover{background:var(--color-primary-hover);}
+.kk-btn-secondary{background:var(--surface-fill);color:var(--text-body);}
+.kk-btn-secondary:hover{background:var(--terracotta-100);}
+.kk-btn-ghost{background:transparent;color:var(--color-primary);}
+.kk-btn-ghost:hover{background:var(--surface-fill);}
+.kk-btn.sm{padding:.32rem .7rem;font-size:.82rem;}
+
+/* chip */
+.kk-chip{display:inline-flex;align-items:center;gap:.3rem;border-radius:var(--radius-pill);padding:.2rem .7rem;font-size:.78rem;font-weight:700;font-family:var(--font-rounded);background:var(--surface-fill);color:var(--text-muted);}
+.kk-chip i{width:13px;height:13px;}
+.kk-chip.sage{background:var(--sage-100);color:var(--sage-700);}
+.kk-chip.terracotta{background:var(--terracotta-100);color:var(--terracotta-700);}
+.kk-chip.butter{background:var(--butter-200);color:var(--butter-600);}
+.kk-chip.alert{background:var(--alert-soft);color:var(--alert);}
+
+/* avatar */
+.kk-avatar{display:inline-grid;place-items:center;border-radius:var(--radius-pill);width:56px;height:56px;background:var(--oat-200);color:var(--charcoal-700);}
+.kk-avatar i{width:26px;height:26px;}
+.kk-avatar.sage{background:var(--sage-100);color:var(--sage-700);}
+.kk-avatar.terracotta{background:var(--terracotta-100);color:var(--terracotta-600);}
+.kk-avatar.butter{background:var(--butter-200);color:var(--butter-600);}
+
+/* input */
+.kk-field{min-width:220px;flex:1;}
+.kk-label{display:block;font-family:var(--font-rounded);font-weight:700;font-size:.875rem;color:var(--text-body);margin-bottom:.25rem;}
+.kk-input{width:100%;border-radius:var(--radius-md);border:1px solid var(--border-input);background:var(--surface-app);padding:.5rem .75rem;font:400 1rem/1.5 var(--font-body);color:var(--text-body);}
+.kk-input::placeholder{color:var(--text-faint);}
+.kk-input:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px var(--ring-primary);}
+.kk-hint{font-family:"Nunito";font-size:.78rem;color:var(--text-muted);margin-top:.3rem;}
+.kk-select-wrap{position:relative;}
+.kk-select-wrap i{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);pointer-events:none;}
+.kk-input.select{appearance:none;padding-right:2rem;}
+
+/* tabs */
+.kk-tabs{display:flex;gap:var(--space-5);border-bottom:1px solid var(--border-soft);}
+.kk-tab{font-family:var(--font-rounded);font-weight:700;font-size:.92rem;color:var(--text-muted);padding:.6rem 0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color var(--dur-base);}
+.kk-tab.active{color:var(--terracotta-600);border-bottom-color:var(--terracotta-500);}
+.kk-tab:hover:not(.active){color:var(--charcoal-700);}
+
+/* nav pill */
+.kk-navpill{font-family:var(--font-rounded);font-weight:700;font-size:.9rem;padding:.45rem .9rem;border-radius:var(--radius-pill);border:none;background:none;color:var(--text-muted);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:background var(--dur-base),color var(--dur-base);}
+.kk-navpill i{width:16px;height:16px;}
+.kk-navpill:hover{background:var(--oat-200);color:var(--charcoal-700);}
+.kk-navpill.active{background:var(--terracotta-500);color:#fff;}
+
+/* statmeter */
+.kk-meter{width:100%;height:14px;border-radius:var(--radius-pill);background:var(--oat-200);overflow:hidden;}
+.kk-meter span{display:block;height:100%;border-radius:var(--radius-pill);background:var(--sage-500);}
+.kk-meter span.over{background:var(--alert);}
+
+/* toast */
+.kk-toast{display:inline-flex;align-items:center;gap:.5rem;border-radius:var(--radius-pill);padding:.5rem 1rem;font-family:var(--font-rounded);font-weight:700;font-size:.9rem;box-shadow:var(--shadow-cozy);}
+.kk-toast i{width:18px;height:18px;}
+.kk-toast.success{background:var(--sage-100);color:var(--sage-700);}
+.kk-toast.caution{background:var(--butter-200);color:var(--butter-600);}
+.kk-toast.alert{background:var(--alert-soft);color:var(--alert);}
+.kk-toast.info{background:var(--terracotta-100);color:var(--terracotta-700);}
+
+/* empty state */
+.kk-empty{background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-cozy);padding:var(--space-10) var(--space-6);text-align:center;max-width:380px;}
+.kk-empty .ic{width:56px;height:56px;border-radius:var(--radius-pill);background:var(--oat-200);display:grid;place-items:center;margin:0 auto var(--space-4);color:var(--charcoal-500);}
+.kk-empty .ic i{width:26px;height:26px;}
+.kk-empty h4{font-size:1.1rem;margin-bottom:.3rem;}
+.kk-empty p{font-size:.9rem;color:var(--text-muted);margin:0 0 var(--space-5);}
+
+/* mini app card example */
+.pet-card{background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-cozy);padding:var(--space-5);max-width:360px;}
+.pet-card .top{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4);}
+.pet-card h4{font-size:1.05rem;}
+.pet-card .sub{font-size:.82rem;color:var(--text-muted);}
+.pet-card .meter-label{display:flex;justify-content:space-between;font-family:"Nunito";font-size:.8rem;margin-bottom:.35rem;}
+.pet-card .meter-label b{color:var(--charcoal-700);} .pet-card .meter-label span{color:var(--text-muted);}
+
+/* footer */
+.foot{padding:var(--space-12) 0 var(--space-16);border-top:1px solid var(--border-soft);}
+.foot-inner{display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap;}
+.foot .tag{font-family:var(--font-display);font-weight:500;color:var(--terracotta-600);font-size:1.15rem;}
+.foot p{font-size:.85rem;color:var(--text-muted);margin:.3rem 0 0;}
+.foot-marks{margin-left:auto;display:flex;gap:var(--space-5);align-items:center;}
+</style>
+</head>
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand"><b>Kibble</b><span>Karma</span></span>
+    <nav class="topnav">
+      <a href="#essence">Essence</a>
+      <a href="#logo">Logo</a>
+      <a href="#color">Color</a>
+      <a href="#type">Type</a>
+      <a href="#tokens">Tokens</a>
+      <a href="#icons">Icons</a>
+      <a href="#voice">Voice</a>
+      <a href="#components">Components</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-lockup">
+      <svg class="hero-mark" viewBox="0 0 120 120" role="img" aria-label="KibbleKarma mark">
+        <path d="M60 18 A42 42 0 0 1 60 102 A21 21 0 0 1 60 60 A21 21 0 0 0 60 18 Z" fill="#E07A5F"></path>
+        <path d="M60 102 A42 42 0 0 1 60 18 A21 21 0 0 1 60 60 A21 21 0 0 0 60 102 Z" fill="#81B29A"></path>
+        <g fill="#FAF7F0" transform="translate(60 39) scale(0.62)">
+          <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+          <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+          <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+        </g>
+        <g fill="#FAF7F0" transform="translate(60 81) rotate(180) scale(0.62)">
+          <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+          <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+          <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+        </g>
+      </svg>
+      <span class="hero-wm"><span class="k1">Kibble</span><span class="k2">Karma</span></span>
+    </div>
+    <h1>Your pet's happiest, healthiest self — tracked with love.</h1>
+    <p class="tagline">Feed good. Feel good. Repeat.</p>
+    <p class="lede">KibbleKarma is a self-hosted pet wellness tracker — a cozy, non-clinical companion for logging meals, weight, and health events for the furry members of your family. This is the brand guide: the voice, color, type, and components that make it feel like a hug from a golden retriever.</p>
+    <div class="hero-badges">
+      <span class="kk-chip terracotta"><i data-lucide="bone"></i> Nourish</span>
+      <span class="kk-chip sage"><i data-lucide="trending-up"></i> Thrive</span>
+      <span class="kk-chip butter"><i data-lucide="home"></i> Private &amp; Yours</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ESSENCE / PILLARS ================= -->
+<section id="essence">
+  <div class="wrap">
+    <p class="eyebrow">Brand essence</p>
+    <h2 class="sec-title">A hug from a golden retriever</h2>
+    <p class="sec-lead">It sits in the sweet spot between a pet-care journal and a wellness dashboard. Not a vet app. Not a cold spreadsheet. It's the digital equivalent of a pet scrapbook that happens to do smart calorie math. The tone is warm, approachable, and a little goofy.</p>
+    <div class="pillars">
+      <article class="pillar">
+        <div class="ic" style="background:var(--terracotta-100);color:var(--terracotta-500)"><i data-lucide="bone"></i></div>
+        <div class="sub">Nourish</div>
+        <h3>Know what goes in the bowl.</h3>
+        <p>Meals, foods, barcode scan, calorie math. Logging a meal should feel like a small act of love, never a chore.</p>
+      </article>
+      <article class="pillar">
+        <div class="ic" style="background:var(--sage-100);color:var(--sage-600)"><i data-lucide="trending-up"></i></div>
+        <div class="sub">Thrive</div>
+        <h3>Watch them grow (in all the right ways).</h3>
+        <p>Weight trends, health events, gentle charts. Progress is celebrated, never scolded — wellbeing, not diagnosis.</p>
+      </article>
+      <article class="pillar">
+        <div class="ic" style="background:var(--butter-200);color:var(--butter-600)"><i data-lucide="home"></i></div>
+        <div class="sub">Private &amp; Yours</div>
+        <h3>Your furball's data. Your home server.</h3>
+        <p>Self-hosted, no subscription, no surveillance. No one else's business but yours and your crew's.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOGO ================= -->
+<section id="logo">
+  <div class="wrap">
+    <p class="eyebrow">The mark</p>
+    <h2 class="sec-title">Logo &amp; wordmark</h2>
+    <p class="sec-lead">Paw-print yin-yang: the karma cycle of give & get, in brand colors.. The mark, never an emoji, is the favicon. Give it room to breathe; the cozy shadow does the lifting, never a hard outline.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="logo-stage" style="background:var(--oat-100)">
+          <svg width="150" height="150" viewBox="0 0 120 120" role="img" aria-label="KibbleKarma mark">
+            <path d="M60 18 A42 42 0 0 1 60 102 A21 21 0 0 1 60 60 A21 21 0 0 0 60 18 Z" fill="#E07A5F"></path>
+            <path d="M60 102 A42 42 0 0 1 60 18 A21 21 0 0 1 60 60 A21 21 0 0 0 60 102 Z" fill="#81B29A"></path>
+            <g fill="#FAF7F0" transform="translate(60 39) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+            <g fill="#FAF7F0" transform="translate(60 81) rotate(180) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+          </svg>
+        </div>
+        <p class="swatch-note">Primary mark — on oat. Clear space ≥ the bowl's height on all sides.</p>
+      </div>
+      <div class="card">
+        <div class="logo-stage" style="background:var(--charcoal-700)">
+          <svg width="150" height="150" viewBox="0 0 120 120" role="img" aria-label="KibbleKarma mark on dark">
+            <path d="M60 18 A42 42 0 0 1 60 102 A21 21 0 0 1 60 60 A21 21 0 0 0 60 18 Z" fill="#E89379"></path>
+            <path d="M60 102 A42 42 0 0 1 60 18 A21 21 0 0 1 60 60 A21 21 0 0 0 60 102 Z" fill="#9AC2AE"></path>
+            <g fill="#3D405B" transform="translate(60 39) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+            <g fill="#3D405B" transform="translate(60 81) rotate(180) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+          </svg>
+        </div>
+        <p class="swatch-note">On charcoal — lighten the ramps one step; keep the warm tint.</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="dd do">
+        <b><i data-lucide="check" style="width:15px;height:15px"></i> Do</b>
+        <ul>
+          <li>Keep the terracotta/sage yin-yang balance intact.</li>
+          <li>Place on oat, white, sage-50, or terracotta-50 grounds.</li>
+          <li>Pair the mark with the Fredoka wordmark for lockups.</li>
+        </ul>
+      </div>
+      <div class="dd dont">
+        <b><i data-lucide="x" style="width:15px;height:15px"></i> Don't</b>
+        <ul>
+          <li>Don't recolor with cool greys, neon, or pure red.</li>
+          <li>Don't add a hard outline or square the bowl off.</li>
+          <li>Don't swap the mark for a 🐾 emoji as a favicon.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COLOR ================= -->
+<section id="color">
+  <div class="wrap">
+    <p class="eyebrow">Palette</p>
+    <h2 class="sec-title">Warm, earthy, cozy</h2>
+    <p class="sec-lead">Terracotta warmth, sage calm, butter cheer, oat-cream ground, and a warm charcoal ink. Everything skews warm — peachy, sunlit, golden. No cool greys, no high-contrast B&amp;W, no neon. The ● marks the brand anchor in each ramp.</p>
+
+    <div id="ramp-mount"></div>
+
+    <h3 style="font-size:1.15rem;margin:var(--space-10) 0 var(--space-4)">Status — kept soft &amp; non-clinical</h3>
+    <div class="status-grid">
+      <div class="status-card" style="background:var(--success-soft)">
+        <h4><span class="dot" style="background:var(--success)"></span>Success</h4>
+        <p>On-track, healthy, logged. <code>#6FA088</code> · sage-600</p>
+      </div>
+      <div class="status-card" style="background:var(--caution-soft)">
+        <h4><span class="dot" style="background:var(--caution)"></span>Caution</h4>
+        <p>A gentle heads-up. <code>#E9B86A</code> · butter-600</p>
+      </div>
+      <div class="status-card" style="background:var(--alert-soft)">
+        <h4><span class="dot" style="background:var(--alert)"></span>Alert</h4>
+        <p>Warm coral — never an alarming red. <code>#D97455</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TYPE ================= -->
+<section id="type">
+  <div class="wrap">
+    <p class="eyebrow">Typography</p>
+    <h2 class="sec-title">Nunito does the work, Fredoka brings the joy</h2>
+    <p class="sec-lead">Nunito is the workhorse for headings and body — rounded, friendly, very legible, and it loves to go heavy (ExtraBold 800 is the house weight for titles). Fredoka, chunky and rounded, is reserved for brand and hero moments. Sentence case everywhere.</p>
+
+    <div class="type-spec">
+      <div style="font-family:var(--font-display);font-weight:600;font-size:clamp(2.2rem,5vw,3.2rem);color:var(--charcoal-900);line-height:1.05">Today's Meals</div>
+      <div class="meta"><span>Fredoka</span><span>Display / hero</span><span>Weights 400–700</span><span>Wordmark · big stat numbers</span></div>
+    </div>
+    <div class="type-spec">
+      <div style="font-family:var(--font-rounded);font-weight:800;font-size:1.875rem;color:var(--charcoal-900);line-height:1.12">Your sleepy snackers</div>
+      <div style="font-family:var(--font-rounded);font-weight:400;font-size:1.0625rem;color:var(--charcoal-700);line-height:1.6;margin-top:.6rem;max-width:46rem">Body copy rides on Nunito at 400 with generous 1.5–1.65 leading. It stays warm and readable at every size — we'll fetch the details from Open Food Facts and keep the math quietly humming in the background.</div>
+      <div class="meta"><span>Nunito</span><span>Headings 800 · Body 400 · Labels 700</span><span>Tight leading on titles, generous on body</span></div>
+    </div>
+
+    <div class="grid-2" style="margin-top:var(--space-6)">
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:var(--space-4)">Type scale</h3>
+        <div class="scale-row"><span class="tk">--text-5xl</span><span class="px">48px</span><span class="demo" style="font-size:1.6rem;font-weight:800">Hero</span></div>
+        <div class="scale-row"><span class="tk">--text-2xl</span><span class="px">24px</span><span class="demo" style="font-size:1.35rem;font-weight:800">Page title</span></div>
+        <div class="scale-row"><span class="tk">--text-lg</span><span class="px">18px</span><span class="demo" style="font-size:1.15rem;font-weight:800">Card title</span></div>
+        <div class="scale-row"><span class="tk">--text-base</span><span class="px">16px</span><span class="demo" style="font-size:1rem;font-weight:400">Body default</span></div>
+        <div class="scale-row"><span class="tk">--text-sm</span><span class="px">14px</span><span class="demo" style="font-size:.9rem;font-weight:700">Label</span></div>
+        <div class="scale-row"><span class="tk">--text-xs</span><span class="px">12px</span><span class="demo" style="font-size:.8rem;font-weight:700">Chip / micro</span></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:var(--space-5)">Weights</h3>
+        <div class="weights">
+          <div class="weight-chip"><div class="big" style="font-weight:400">Aa</div><div class="lbl">Regular 400<br>body</div></div>
+          <div class="weight-chip"><div class="big" style="font-weight:600">Aa</div><div class="lbl">Medium 600</div></div>
+          <div class="weight-chip"><div class="big" style="font-weight:700">Aa</div><div class="lbl">Bold 700<br>labels</div></div>
+          <div class="weight-chip"><div class="big" style="font-weight:800">Aa</div><div class="lbl">ExtraBold 800<br>titles</div></div>
+        </div>
+        <p style="font-size:.88rem;color:var(--text-muted);margin-top:var(--space-6);line-height:1.5">ExtraBold (800) is the signature heading weight — it shows up as <code style="font-family:Nunito;font-weight:700;color:var(--terracotta-600)">font-extrabold</code> all over the product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOKENS ================= -->
+<section id="tokens">
+  <div class="wrap">
+    <p class="eyebrow">Foundations</p>
+    <h2 class="sec-title">Spacing, radii, shadow &amp; motion</h2>
+    <p class="sec-lead">A 4px base scale, round-all-the-way-down corners, one soft warm-tinted shadow family, and gentle motion. The cozy feel is engineered: generous rounding plus a single low shadow, never harsh edges or multi-layer elevation.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:var(--space-5)">Spacing scale · 4px base</h3>
+        <div class="tok-list">
+          <div class="tok-row"><span class="name">--space-1</span><span class="val">4px</span><div class="sbar" style="width:4px"></div></div>
+          <div class="tok-row"><span class="name">--space-2</span><span class="val">8px</span><div class="sbar" style="width:8px"></div></div>
+          <div class="tok-row"><span class="name">--space-3</span><span class="val">12px</span><div class="sbar" style="width:12px"></div></div>
+          <div class="tok-row"><span class="name">--space-4</span><span class="val">16px</span><div class="sbar" style="width:16px"></div></div>
+          <div class="tok-row"><span class="name">--space-5</span><span class="val">20px</span><div class="sbar" style="width:20px"></div></div>
+          <div class="tok-row"><span class="name">--space-6</span><span class="val">24px</span><div class="sbar" style="width:24px"></div></div>
+          <div class="tok-row"><span class="name">--space-8</span><span class="val">32px</span><div class="sbar" style="width:32px"></div></div>
+          <div class="tok-row"><span class="name">--space-12</span><span class="val">48px</span><div class="sbar" style="width:48px"></div></div>
+          <div class="tok-row"><span class="name">--space-16</span><span class="val">64px</span><div class="sbar" style="width:64px"></div></div>
+        </div>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-top:var(--space-5);line-height:1.5">Card padding is <b style="color:var(--charcoal-700)">--space-5</b> (20px); content lives in a centered <b style="color:var(--charcoal-700)">1024px</b> column.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:var(--space-5)">Radii · round all the way down</h3>
+        <div class="radii-grid">
+          <div class="radii-cell"><div class="box" style="border-radius:.5rem"></div><div class="name">sm</div><div class="val">8px · chips inner</div></div>
+          <div class="radii-cell"><div class="box" style="border-radius:.75rem"></div><div class="name">md</div><div class="val">12px · inputs</div></div>
+          <div class="radii-cell"><div class="box" style="border-radius:1.25rem"></div><div class="name">card</div><div class="val">20px · surfaces</div></div>
+          <div class="radii-cell"><div class="box" style="border-radius:9999px"></div><div class="name">pill</div><div class="val">∞ · btns/nav</div></div>
+        </div>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-top:var(--space-5);line-height:1.5">Buttons, nav items, chips, and avatars are <b style="color:var(--charcoal-700)">full pills</b>. Nothing is square.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin:var(--space-10) 0 var(--space-5)">Shadows · one warm cocoa-tinted family</h3>
+    <div class="shadow-grid">
+      <div class="shadow-cell"><div class="box" style="box-shadow:var(--shadow-cozy-sm)"></div><div class="name">cozy-sm</div><span class="val">0 2px 10px / .06</span></div>
+      <div class="shadow-cell"><div class="box" style="box-shadow:var(--shadow-cozy)"></div><div class="name">cozy</div><span class="val">0 4px 20px / .08 — the signature</span></div>
+      <div class="shadow-cell"><div class="box" style="box-shadow:var(--shadow-cozy-lg)"></div><div class="name">cozy-lg</div><span class="val">0 10px 34px / .14 — hover</span></div>
+      <div class="shadow-cell"><div class="box" style="box-shadow:var(--shadow-press)"></div><div class="name">press</div><span class="val">inset — sunken tiles</span></div>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin:var(--space-10) 0 var(--space-5)">Motion · gentle, never jumpy</h3>
+    <div class="motion-grid">
+      <div class="motion-card">
+        <b style="font-family:var(--font-rounded);font-size:.92rem;color:var(--charcoal-700)">--ease-cozy</b>
+        <div class="motion-track"><div class="motion-dot cozy"></div></div>
+        <p style="font-size:.84rem;color:var(--text-muted);margin:0">A soft settle. The house easing for nearly everything — color shifts, fades, hovers.</p>
+      </div>
+      <div class="motion-card">
+        <b style="font-family:var(--font-rounded);font-size:.92rem;color:var(--charcoal-700)">--ease-bounce</b>
+        <div class="motion-track"><div class="motion-dot bounce"></div></div>
+        <p style="font-size:.84rem;color:var(--text-muted);margin:0">A playful overshoot, reserved for delight — a logo wiggle, a streak badge popping in.</p>
+      </div>
+    </div>
+    <div class="dur-list">
+      <span>fast · 120ms</span><span>base · 200ms</span><span>slow · 320ms</span><span>Respects prefers-reduced-motion</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ICONOGRAPHY ================= -->
+<section id="icons">
+  <div class="wrap">
+    <p class="eyebrow">Iconography</p>
+    <h2 class="sec-title">Lucide line icons, warm-tinted</h2>
+    <p class="sec-lead">Our icon language is Lucide — sleek, rounded, ~2px stroke with rounded caps that echo Nunito and Fredoka. Emoji are deprecated as functional icons; they may pepper celebratory microcopy sparingly, but warm words carry the tone. One icon per label, leading the text, 18–24px.</p>
+
+    <div class="icon-group-title">Species</div>
+    <div class="icon-grid">
+      <div class="icon-cell terra"><i data-lucide="dog"></i><span class="nm">dog</span></div>
+      <div class="icon-cell terra"><i data-lucide="cat"></i><span class="nm">cat</span></div>
+      <div class="icon-cell terra"><i data-lucide="rabbit"></i><span class="nm">rabbit</span></div>
+      <div class="icon-cell terra"><i data-lucide="paw-print"></i><span class="nm">paw-print</span></div>
+    </div>
+
+    <div class="icon-group-title">Health events</div>
+    <div class="icon-grid">
+      <div class="icon-cell sage"><i data-lucide="stethoscope"></i><span class="nm">stethoscope</span></div>
+      <div class="icon-cell sage"><i data-lucide="thermometer"></i><span class="nm">thermometer</span></div>
+      <div class="icon-cell sage"><i data-lucide="pill"></i><span class="nm">pill</span></div>
+      <div class="icon-cell sage"><i data-lucide="flask-conical"></i><span class="nm">flask-conical</span></div>
+      <div class="icon-cell sage"><i data-lucide="notebook-pen"></i><span class="nm">notebook-pen</span></div>
+    </div>
+
+    <div class="icon-group-title">Actions &amp; status</div>
+    <div class="icon-grid">
+      <div class="icon-cell"><i data-lucide="bone"></i><span class="nm">bone</span></div>
+      <div class="icon-cell"><i data-lucide="scale"></i><span class="nm">scale</span></div>
+      <div class="icon-cell"><i data-lucide="scan-barcode"></i><span class="nm">scan-barcode</span></div>
+      <div class="icon-cell"><i data-lucide="sparkles"></i><span class="nm">sparkles</span></div>
+      <div class="icon-cell"><i data-lucide="flame"></i><span class="nm">flame</span></div>
+      <div class="icon-cell"><i data-lucide="trophy"></i><span class="nm">trophy</span></div>
+      <div class="icon-cell"><i data-lucide="party-popper"></i><span class="nm">party-popper</span></div>
+      <div class="icon-cell"><i data-lucide="target"></i><span class="nm">target</span></div>
+    </div>
+
+    <div class="icon-group-title">UI glyphs</div>
+    <div class="icon-grid">
+      <div class="icon-cell"><i data-lucide="arrow-left"></i><span class="nm">arrow-left</span></div>
+      <div class="icon-cell"><i data-lucide="trending-up"></i><span class="nm">trending-up</span></div>
+      <div class="icon-cell"><i data-lucide="plus"></i><span class="nm">plus</span></div>
+      <div class="icon-cell"><i data-lucide="x"></i><span class="nm">x</span></div>
+      <div class="icon-cell"><i data-lucide="download"></i><span class="nm">download</span></div>
+      <div class="icon-cell"><i data-lucide="chevron-down"></i><span class="nm">chevron-down</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VOICE ================= -->
+<section id="voice">
+  <div class="wrap">
+    <p class="eyebrow">Voice &amp; tone</p>
+    <h2 class="sec-title">Warm, encouraging, playful, a little silly</h2>
+    <p class="sec-lead">The voice is the most distinctive thing about KibbleKarma. It speaks in the second person — possessive and affectionate — and treats the pet as a beloved family member. Never clinical, never anxiety-inducing. The app calls itself "we." Sentence case everywhere, never ALL CAPS.</p>
+
+    <div class="voice-attrs">
+      <span class="a">Warm</span><span class="a">Encouraging</span><span class="a">Playful</span><span class="a">Calm</span><span class="a">A little silly</span>
+    </div>
+
+    <h3 style="font-size:1.1rem;margin-bottom:var(--space-4)">The KibbleKarma lexicon</h3>
+    <table class="lex-table">
+      <thead><tr><th>Plain word</th><th>KibbleKarma says</th></tr></thead>
+      <tbody>
+        <tr><td class="plain">Pets</td><td class="kk">buddies · furry friends · sleepy snackers · your crew</td></tr>
+        <tr><td class="plain">Meal / feeding</td><td class="kk">a meal — "Log a meal", "Today's Meals"</td></tr>
+        <tr><td class="plain">Weigh-in</td><td class="kk">a weigh-in — "Log a weigh-in"</td></tr>
+        <tr><td class="plain">Add a pet</td><td class="kk">"Add a new buddy"</td></tr>
+        <tr><td class="plain">Loading…</td><td class="kk">"Fetching the cuddles…" · "Snuggling in…"</td></tr>
+        <tr><td class="plain">Empty state</td><td class="kk">"No buddies yet" · "your pet is patiently waiting 🐶"</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tone-pair">
+      <div class="tone-col say">
+        <h4><i data-lucide="check" style="width:15px;height:15px"></i> We say</h4>
+        <p>They're right on track! 🎯</p>
+        <p>A little over today.</p>
+        <p>Logged 312 kcal 🎉</p>
+        <p>Good kibble karma incoming.</p>
+      </div>
+      <div class="tone-col dont">
+        <h4><i data-lucide="x" style="width:15px;height:15px"></i> Never</h4>
+        <p>WARNING: LIMIT EXCEEDED</p>
+        <p>You overfed your animal.</p>
+        <p>Entry recorded: 312 calories.</p>
+        <p>Caloric intake within parameters.</p>
+      </div>
+    </div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:var(--space-6);line-height:1.6;max-width:46rem">Progress is celebrated, never scolded. On-target gets a cheer; over-target is softened — never "EXCEEDED LIMIT." Health is framed as wellbeing, not diagnosis. Taglines for hero moments: <em style="color:var(--terracotta-600);font-style:normal;font-weight:600">"Good vibes start in the bowl."</em> · <em style="color:var(--terracotta-600);font-style:normal;font-weight:600">"Because every good pup deserves good karma."</em></p>
+  </div>
+</section>
+
+<!-- ================= COMPONENTS ================= -->
+<section id="components">
+  <div class="wrap">
+    <p class="eyebrow">Components</p>
+    <h2 class="sec-title">The building blocks</h2>
+    <p class="sec-lead">Reusable primitives, all backed by tokens. Pill buttons, cozy-shadowed cards, soft chips and avatars, gentle inputs, underline tabs, and feedback that celebrates. Press gives a tiny settle; focus shows a soft 3px terracotta ring.</p>
+
+    <!-- Buttons -->
+    <div class="comp-block">
+      <h3>Buttons</h3>
+      <p class="desc">Always pills. Primary = terracotta fill; Secondary = sand → warms to terracotta-100 on hover; Ghost = transparent terracotta. Optional leading icon.</p>
+      <div class="demo-stage">
+        <button class="kk-btn kk-btn-primary"><i data-lucide="bone"></i> Log a meal</button>
+        <button class="kk-btn kk-btn-secondary"><i data-lucide="scale"></i> Weigh-in</button>
+        <button class="kk-btn kk-btn-ghost">Maybe later</button>
+        <button class="kk-btn kk-btn-primary sm"><i data-lucide="plus"></i> Add</button>
+        <button class="kk-btn kk-btn-primary" disabled>Disabled</button>
+      </div>
+    </div>
+
+    <!-- Chips + Avatars -->
+    <div class="comp-block">
+      <h3>Chips &amp; avatars</h3>
+      <p class="desc">Five soft tones for chips. Avatars are round tiles holding a Lucide species glyph on a tinted ground.</p>
+      <div class="demo-stage">
+        <span class="kk-chip">neutral</span>
+        <span class="kk-chip sage"><i data-lucide="target"></i> on track</span>
+        <span class="kk-chip terracotta"><i data-lucide="flame"></i> 6-day streak</span>
+        <span class="kk-chip butter"><i data-lucide="sparkles"></i> karma +12</span>
+        <span class="kk-chip alert">a little over</span>
+        <span style="width:1px;height:40px;background:var(--border-soft)"></span>
+        <span class="kk-avatar terracotta"><i data-lucide="dog"></i></span>
+        <span class="kk-avatar sage"><i data-lucide="cat"></i></span>
+        <span class="kk-avatar butter"><i data-lucide="rabbit"></i></span>
+        <span class="kk-avatar"><i data-lucide="paw-print"></i></span>
+      </div>
+    </div>
+
+    <!-- Forms -->
+    <div class="comp-block">
+      <h3>Forms</h3>
+      <p class="desc">Label + rounded input with a sand border that turns terracotta on focus, plus a soft ring. Selects get a soft chevron.</p>
+      <div class="demo-stage" style="align-items:flex-start">
+        <div class="kk-field">
+          <label class="kk-label">Buddy's name</label>
+          <input class="kk-input" placeholder="e.g. Biscuit" value="Biscuit">
+          <div class="kk-hint">This is how we'll greet them.</div>
+        </div>
+        <div class="kk-field">
+          <label class="kk-label">Species</label>
+          <div class="kk-select-wrap">
+            <select class="kk-input select"><option>Dog</option><option>Cat</option><option>Rabbit</option><option>Other</option></select>
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="kk-hint">Picks the right avatar glyph.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="comp-block">
+      <h3>Navigation</h3>
+      <p class="desc">Underline tabs for in-page sections; pill nav for top-level destinations (active = terracotta fill + white).</p>
+      <div class="demo-stage" style="flex-direction:column;align-items:stretch;gap:var(--space-5)">
+        <div class="kk-tabs">
+          <button class="kk-tab active">Overview</button>
+          <button class="kk-tab">Diet</button>
+          <button class="kk-tab">Meals</button>
+          <button class="kk-tab">Weigh-ins</button>
+          <button class="kk-tab">Health</button>
+        </div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <button class="kk-navpill active"><i data-lucide="paw-print"></i> My crew</button>
+          <button class="kk-navpill"><i data-lucide="bone"></i> Foods</button>
+          <button class="kk-navpill"><i data-lucide="trending-up"></i> Trends</button>
+          <button class="kk-navpill"><i data-lucide="download"></i> Export</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback + app card -->
+    <div class="comp-block">
+      <h3>Feedback &amp; data display</h3>
+      <p class="desc">Toasts celebrate rather than warn. StatMeter is a sage fill on a sand track that softens to alert when over goal. Empty states are warm and patient.</p>
+      <div class="grid-2">
+        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+          <div class="kk-toast success"><i data-lucide="party-popper"></i> Logged 312 kcal — right on track!</div>
+          <div class="kk-toast caution"><i data-lucide="target"></i> A little over today.</div>
+          <div class="kk-toast info"><i data-lucide="sparkles"></i> Good kibble karma incoming.</div>
+          <div class="pet-card">
+            <div class="top">
+              <span class="kk-avatar terracotta"><i data-lucide="dog"></i></span>
+              <div>
+                <h4>Biscuit</h4>
+                <div class="sub">Golden retriever · 28.4 kg</div>
+              </div>
+              <span class="kk-chip sage" style="margin-left:auto"><i data-lucide="target"></i> on track</span>
+            </div>
+            <div class="meter-label"><b>Today's meals</b><span>312 / 340 kcal</span></div>
+            <div class="kk-meter"><span style="width:92%"></span></div>
+          </div>
+        </div>
+        <div style="display:grid;place-items:center">
+          <div class="kk-empty">
+            <div class="ic"><i data-lucide="paw-print"></i></div>
+            <h4>No buddies yet</h4>
+            <p>Your pet is patiently waiting. Add your first furry friend to start logging meals.</p>
+            <button class="kk-btn kk-btn-primary"><i data-lucide="plus"></i> Add a new buddy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div>
+      <div class="tag">Feed good. Feel good. Repeat.</div>
+      <p>KibbleKarma Design System · brand guide · self-hosted pet wellness, tracked with love.</p>
+    </div>
+    <div class="foot-marks">
+      <svg width="56" height="56" viewBox="0 0 120 120" role="img" aria-label="KibbleKarma mark">
+        <path d="M60 18 A42 42 0 0 1 60 102 A21 21 0 0 1 60 60 A21 21 0 0 0 60 18 Z" fill="#E07A5F"></path>
+        <path d="M60 102 A42 42 0 0 1 60 18 A21 21 0 0 1 60 60 A21 21 0 0 0 60 102 Z" fill="#81B29A"></path>
+        <g fill="#FAF7F0" transform="translate(60 39) scale(0.62)">
+          <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+          <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+          <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+        </g>
+        <g fill="#FAF7F0" transform="translate(60 81) rotate(180) scale(0.62)">
+          <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+          <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+          <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+        </g>
+      </svg>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---- Build color ramps from data ---- */
+const RAMPS = [
+  { name:"Terracotta", role:"Primary · buttons, active nav, key numbers, links", brand:"500",
+    stops:[["700","#B95A40"],["600","#CF6A4C"],["500","#E07A5F"],["400","#E89379"],["300","#F0B3A1"],["200","#F7D4C9"],["100","#FBE8E1"],["50","#FDF3EF"]] },
+  { name:"Sage", role:"Secondary · healthy / on-track / calm, charts, success", brand:"500",
+    stops:[["700","#5C8C74"],["600","#6FA088"],["500","#81B29A"],["400","#9AC2AE"],["300","#B7D4C6"],["200","#D5E6DD"],["100","#E8F2EC"],["50","#F3F8F5"]] },
+  { name:"Butter", role:"Accent · highlights, badges, streaks, karma score", brand:"500",
+    stops:[["600","#E9B86A"],["500","#F2CC8F"],["400","#F6D9A8"],["300","#FAE6C4"],["200","#FCF0DC"],["100","#FEF7EC"]] },
+  { name:"Oat / Cream", role:"Ground · app bg (100), sand fill (200), dividers (300)", brand:"100",
+    stops:[["300","#EFE6D6"],["200","#F3EAD9"],["100","#FAF7F0"],["white","#FFFFFF"]] },
+  { name:"Charcoal", role:"Ink · warm, friendly, readable text", brand:"700",
+    stops:[["900","#2B2D40"],["700","#3D405B"],["500","#5B5E78"],["300","#8C8FA3"]] },
+];
+function lum(hex){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return (0.299*r+0.587*g+0.114*b)/255; }
+const mount = document.getElementById('ramp-mount');
+RAMPS.forEach(r=>{
+  const wrap=document.createElement('div'); wrap.className='ramp';
+  wrap.innerHTML=`<div class="ramp-head"><h4>${r.name}</h4><span class="role">${r.role}</span></div>`;
+  const row=document.createElement('div'); row.className='ramp-row';
+  r.stops.forEach(([n,hex])=>{
+    const ink = lum(hex)>0.6 ? '#3D405B' : '#FFFFFF';
+    const sw=document.createElement('div'); sw.className='sw'+(n===r.brand?' brand':'');
+    sw.style.background=hex; sw.style.color=ink;
+    sw.innerHTML=`<span class="n">${n}</span><span class="h">${hex.toUpperCase()}</span>`;
+    row.appendChild(sw);
+  });
+  wrap.appendChild(row); mount.appendChild(wrap);
+});
+</script>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

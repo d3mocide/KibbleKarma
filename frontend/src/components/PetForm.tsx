@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import type { Pet } from "../api/types";
-import { ErrorBanner } from "./ui";
+import { ErrorBanner, TextField, SelectField, Button } from "./ui";
 
 export interface PetFormValues {
   name: string;
@@ -65,78 +65,80 @@ export default function PetForm({
   return (
     <form onSubmit={submit} className="space-y-4">
       <ErrorBanner message={error} />
-      <div>
-        <label className="label">Name</label>
-        <input className="input" value={v.name} onChange={(e) => set("name", e.target.value)} required />
-      </div>
+      
+      <TextField 
+        label="Name" 
+        value={v.name} 
+        onChange={(e) => set("name", e.target.value)} 
+        required 
+      />
+      
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="label">Species</label>
-          <select className="input" value={v.species} onChange={(e) => set("species", e.target.value)}>
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label className="label">Sex</label>
-          <select className="input" value={v.sex} onChange={(e) => set("sex", e.target.value)}>
-            <option value="unknown">Unknown</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
+        <SelectField 
+          label="Species" 
+          value={v.species} 
+          onChange={(e) => set("species", e.target.value)}
+        >
+          <option value="dog">Dog</option>
+          <option value="cat">Cat</option>
+          <option value="other">Other</option>
+        </SelectField>
+        
+        <SelectField 
+          label="Sex" 
+          value={v.sex} 
+          onChange={(e) => set("sex", e.target.value)}
+        >
+          <option value="unknown">Unknown</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </SelectField>
       </div>
+      
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="label">Breed</label>
-          <input className="input" value={v.breed} onChange={(e) => set("breed", e.target.value)} />
-        </div>
-        <div>
-          <label className="label">Date of birth</label>
-          <input
-            type="date"
-            className="input"
-            value={v.dateOfBirth}
-            onChange={(e) => set("dateOfBirth", e.target.value)}
-          />
-        </div>
+        <TextField 
+          label="Breed" 
+          value={v.breed} 
+          onChange={(e) => set("breed", e.target.value)} 
+        />
+        
+        <TextField 
+          type="date" 
+          label="Date of birth" 
+          value={v.dateOfBirth} 
+          onChange={(e) => set("dateOfBirth", e.target.value)} 
+        />
       </div>
+      
       <div className="grid grid-cols-3 gap-3">
-        <div>
-          <label className="label">Ideal min (kg)</label>
-          <input
-            type="number"
-            step="0.1"
-            min="0"
-            className="input"
-            value={v.idealWeightMinKg}
-            onChange={(e) => set("idealWeightMinKg", e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="label">Ideal max (kg)</label>
-          <input
-            type="number"
-            step="0.1"
-            min="0"
-            className="input"
-            value={v.idealWeightMaxKg}
-            onChange={(e) => set("idealWeightMaxKg", e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="label">Daily kcal</label>
-          <input
-            type="number"
-            step="1"
-            min="0"
-            className="input"
-            value={v.vetDailyEnergyKcal}
-            onChange={(e) => set("vetDailyEnergyKcal", e.target.value)}
-          />
-        </div>
+        <TextField 
+          type="number" 
+          step="0.1" 
+          min="0" 
+          label="Ideal min (kg)" 
+          value={v.idealWeightMinKg} 
+          onChange={(e) => set("idealWeightMinKg", e.target.value)} 
+        />
+        
+        <TextField 
+          type="number" 
+          step="0.1" 
+          min="0" 
+          label="Ideal max (kg)" 
+          value={v.idealWeightMaxKg} 
+          onChange={(e) => set("idealWeightMaxKg", e.target.value)} 
+        />
+        
+        <TextField 
+          type="number" 
+          step="1" 
+          min="0" 
+          label="Daily kcal" 
+          value={v.vetDailyEnergyKcal} 
+          onChange={(e) => set("vetDailyEnergyKcal", e.target.value)} 
+        />
       </div>
+      
       <div>
         <label className="label">Notes</label>
         <textarea
@@ -146,9 +148,11 @@ export default function PetForm({
           onChange={(e) => set("notes", e.target.value)}
         />
       </div>
-      <button className="btn-primary w-full" disabled={submitting}>
-        {submitting ? "Saving..." : pet ? "Save changes" : "Add buddy"}
-      </button>
+      
+      <Button type="submit" loading={submitting} fullWidth>
+        {pet ? "Save changes" : "Add buddy"}
+      </Button>
     </form>
   );
 }
+

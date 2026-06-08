@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiError } from "../api/client";
-import { ErrorBanner } from "../components/ui";
+import { ErrorBanner, TextField, Button } from "../components/ui";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -30,55 +30,64 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-surface-app text-text-body font-body animate-fade-in">
       <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <div className="text-5xl">🐾</div>
-          <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">Join KibbleKarma</h1>
-          <p className="text-cocoa/60">Start a cozy log for your furry friends.</p>
+        <div className="mb-6 text-center flex flex-col items-center">
+          <svg className="h-14 w-14 mb-2 flex-shrink-0" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 18 A42 42 0 0 1 60 102 A21 21 0 0 1 60 60 A21 21 0 0 0 60 18 Z" fill="#E07A5F"></path>
+            <path d="M60 102 A42 42 0 0 1 60 18 A21 21 0 0 1 60 60 A21 21 0 0 0 60 102 Z" fill="#81B29A"></path>
+            <g fill="#FAF7F0" transform="translate(60 39) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+            <g fill="#FAF7F0" transform="translate(60 81) rotate(180) scale(0.62)">
+              <ellipse cx="0" cy="7" rx="9" ry="8"></ellipse><ellipse cx="-10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+              <ellipse cx="-3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse><ellipse cx="3.7" cy="-8.5" rx="3.5" ry="5.2"></ellipse>
+              <ellipse cx="10" cy="-2" rx="3.4" ry="4.8"></ellipse>
+            </g>
+          </svg>
+          <h1 className="text-2xl font-extrabold text-charcoal-900 tracking-tight">Join KibbleKarma</h1>
+          <p className="text-text-muted text-sm mt-1">Start a cozy log for your furry friends.</p>
         </div>
         <form onSubmit={onSubmit} className="card space-y-4">
           <ErrorBanner message={error} />
-          <div>
-            <label className="label">Email</label>
-            <input
-              className="input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </div>
-          <div>
-            <label className="label">Password</label>
-            <input
-              className="input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              autoComplete="new-password"
-            />
-          </div>
-          <div>
-            <label className="label">Confirm password</label>
-            <input
-              className="input"
-              type="password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              required
-              autoComplete="new-password"
-            />
-          </div>
-          <button className="btn-primary w-full" disabled={busy}>
-            {busy ? "Creating..." : "Create account"}
-          </button>
-          <p className="text-center text-sm text-cocoa/60">
+          
+          <TextField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
+          
+          <TextField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            autoComplete="new-password"
+          />
+          
+          <TextField
+            label="Confirm password"
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            autoComplete="new-password"
+          />
+          
+          <Button type="submit" loading={busy} fullWidth>
+            Create account
+          </Button>
+          
+          <p className="text-center text-sm text-text-muted pt-2 border-t border-oat-300">
             Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-teal-deep hover:underline">
+            <Link to="/login" className="font-bold text-primary hover:text-primary-hover transition">
               Sign in
             </Link>
           </p>
@@ -87,3 +96,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+
