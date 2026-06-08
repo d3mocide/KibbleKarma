@@ -5,9 +5,11 @@ import { apiError } from "../api/client";
 import { ErrorBanner, TextField, Button } from "../components/ui";
 
 export default function LoginPage() {
-  const { login, allowRegistration } = useAuth();
+  const { login, register, allowRegistration } = useAuth();
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -16,7 +18,16 @@ export default function LoginPage() {
     setError("");
     setBusy(true);
     try {
-      await login(email, password);
+      if (activeTab === "login") {
+        await login(email, password);
+      } else {
+        if (password !== confirmPassword) {
+          setError("Passwords don't match");
+          setBusy(false);
+          return;
+        }
+        await register(email, password);
+      }
     } catch (err) {
       setError(apiError(err));
     } finally {
@@ -43,11 +54,48 @@ export default function LoginPage() {
             </g>
           </svg>
           <h1 className="text-2xl font-extrabold text-charcoal-900 tracking-tight">
-            Welcome back to KibbleKarma
+            {activeTab === "login" ? "Welcome back to KibbleKarma" : "Join KibbleKarma"}
           </h1>
-          <p className="text-text-muted text-sm mt-1">Cozy wellness tracking for your sleepy snackers.</p>
+          <p className="text-text-muted text-sm mt-1">
+            {activeTab === "login"
+              ? "Cozy wellness tracking for your sleepy snackers."
+              : "Start a cozy log for your furry friends."}
+          </p>
         </div>
         <form onSubmit={onSubmit} className="card space-y-4">
+          {allowRegistration && (
+            <div className="flex border-b border-oat-300 -mx-5 -mt-5 mb-2 overflow-hidden rounded-t-card">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("login");
+                  setError("");
+                }}
+                className={`flex-1 py-3 text-sm font-bold border-b-2 transition-all duration-200 ${
+                  activeTab === "login"
+                    ? "border-primary text-primary bg-oat-100/30"
+                    : "border-transparent text-text-muted hover:bg-oat-200 hover:text-charcoal-900"
+                }`}
+              >
+                Sign in
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("register");
+                  setError("");
+                }}
+                className={`flex-1 py-3 text-sm font-bold border-b-2 transition-all duration-200 ${
+                  activeTab === "register"
+                    ? "border-primary text-primary bg-oat-100/30"
+                    : "border-transparent text-text-muted hover:bg-oat-200 hover:text-charcoal-900"
+                }`}
+              >
+                Create account
+              </button>
+            </div>
+          )}
+
           <ErrorBanner message={error} />
           
           <TextField
@@ -65,23 +113,34 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            autoComplete="current-password"
+            minLength={activeTab === "register" ? 6 : undefined}
+            autoComplete={activeTab === "login" ? "current-password" : "new-password"}
           />
+
+          {activeTab === "register" && (
+            <TextField
+              label="Confirm password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              autoComplete="new-password"
+            />
+          )}
           
           <Button 
             type="submit" 
             loading={busy} 
             fullWidth
           >
-            {busy ? "Snuggling in..." : "Sign in"}
+            {busy 
+              ? (activeTab === "login" ? "Snuggling in..." : "Creating account...") 
+              : (activeTab === "login" ? "Sign in" : "Create account")}
           </Button>
           
-          {allowRegistration && (
-            <p className="text-center text-sm text-text-muted pt-2 border-t border-oat-300">
-              New here?{" "}
-              <Link to="/register" className="font-bold text-primary hover:text-primary-hover transition">
-                Create an account
-              </Link>
+          {!allowRegistration && (
+            <p className="text-center text-xs text-text-muted pt-2 border-t border-oat-300">
+              Registration is closed on this instance.
             </p>
           )}
         </form>
