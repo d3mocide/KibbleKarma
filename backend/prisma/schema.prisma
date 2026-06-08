@@ -1,0 +1,164 @@
+// Prisma schema for Nibbles & Naps
+// PostgreSQL datasource
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Species {
+  dog
+  cat
+  other
+}
+
+enum Sex {
+  male
+  female
+  unknown
+}
+
+enum FoodSource {
+  manual
+  open_food_facts
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  pets  Pet[]
+  foods Food[]
+
+  @@map("users")
+}
+
+model Pet {
+  id                  String    @id @default(uuid()) @db.Uuid
+  userId              String    @map("user_id") @db.Uuid
+  name                String
+  species             Species   @default(dog)
+  breed               String?
+  sex                 Sex       @default(unknown)
+  dateOfBirth         DateTime? @map("date_of_birth") @db.Date
+  idealWeightMinKg    Decimal?  @map("ideal_weight_min_kg") @db.Decimal(6, 2)
+  idealWeightMaxKg    Decimal?  @map("ideal_weight_max_kg") @db.Decimal(6, 2)
+  vetDailyEnergyKcal  Decimal?  @map("vet_daily_energy_kcal") @db.Decimal(8, 2)
+  notes               String?
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  petFoodProfiles  PetFoodProfile[]
+  mealLogs         MealLog[]
+  weightLogs       WeightLog[]
+  healthEvents     HealthEvent[]
+
+  @@index([userId])
+  @@map("pets")
+}
+
+model Food {
+  id                   String     @id @default(uuid()) @db.Uuid
+  userId               String?    @map("user_id") @db.Uuid
+  name                 String
+  brand                String?
+  category             String?
+  barcode              String?
+  energyKcalPer100g    Decimal?   @map("energy_kcal_per_100g") @db.Decimal(10, 2)
+  energyKcalPerKg      Decimal?   @map("energy_kcal_per_kg") @db.Decimal(10, 2)
+  energyKcalPerServing Decimal?   @map("energy_kcal_per_serving") @db.Decimal(10, 2)
+  servingSizeG         Decimal?   @map("serving_size_g") @db.Decimal(10, 2)
+  source               FoodSource @default(manual)
+  offProductUrl        String?    @map("off_product_url")
+  rawOffData           Json?      @map("raw_off_data")
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  petFoodProfiles PetFoodProfile[]
+  mealLogs        MealLog[]
+
+  @@index([userId])
+  @@index([barcode])
+  @@map("foods")
+}
+
+model PetFoodProfile {
+  id               String   @id @default(uuid()) @db.Uuid
+  petId            String   @map("pet_id") @db.Uuid
+  foodId           String   @map("food_id") @db.Uuid
+  isPrimary        Boolean  @default(false) @map("is_primary")
+  targetDailyKcal  Decimal? @map("target_daily_kcal") @db.Decimal(8, 2)
+  targetDailyGrams Decimal? @map("target_daily_grams") @db.Decimal(8, 2)
+  mealsPerDay      Decimal? @map("meals_per_day") @db.Decimal(5, 2)
+  notes            String?
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  pet  Pet  @relation(fields: [petId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@index([petId])
+  @@index([foodId])
+  @@map("pet_food_profiles")
+}
+
+model MealLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  petId         String   @map("pet_id") @db.Uuid
+  foodId        String   @map("food_id") @db.Uuid
+  loggedAt      DateTime @default(now()) @map("logged_at")
+  amountGrams   Decimal? @map("amount_grams") @db.Decimal(10, 2)
+  amountServings Decimal? @map("amount_servings") @db.Decimal(10, 2)
+  computedKcal  Decimal? @map("computed_kcal") @db.Decimal(10, 2)
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  pet  Pet  @relation(fields: [petId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Restrict)
+
+  @@index([petId, loggedAt])
+  @@index([foodId])
+  @@map("meal_logs")
+}
+
+model WeightLog {
+  id                 String   @id @default(uuid()) @db.Uuid
+  petId              String   @map("pet_id") @db.Uuid
+  weighedAt          DateTime @default(now()) @map("weighed_at")
+  weightKg           Decimal  @map("weight_kg") @db.Decimal(6, 2)
+  bodyConditionScore Decimal? @map("body_condition_score") @db.Decimal(3, 1)
+  notes              String?
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@index([petId, weighedAt])
+  @@map("weight_logs")
+}
+
+model HealthEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  petId       String   @map("pet_id") @db.Uuid
+  eventAt     DateTime @default(now()) @map("event_at")
+  type        String
+  title       String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@index([petId, eventAt])
+  @@map("health_events")
+}
