@@ -13,7 +13,7 @@ function required(name: string, fallback?: string): string {
 export const config = {
   port: parseInt(process.env.PORT ?? "4000", 10),
   nodeEnv: process.env.NODE_ENV ?? "development",
-  databaseUrl: required("DATABASE_URL", "postgresql://nibbles:naps@localhost:5432/nibbles_and_naps"),
+  databaseUrl: required("DATABASE_URL", "postgresql://kibble:karma@localhost:5432/kibble_karma"),
   jwt: {
     secret: required("JWT_SECRET", "dev-insecure-secret-change-me"),
     expiresIn: process.env.JWT_EXPIRES_IN ?? "7d",
@@ -22,7 +22,7 @@ export const config = {
     baseUrl: process.env.OFF_BASE_URL ?? "https://world.openfoodfacts.org",
     userAgent:
       process.env.OFF_USER_AGENT ??
-      "NibblesAndNaps/1.0 (https://github.com/d3mocide/nibbles-and-naps)",
+      "KibbleKarma/1.0 (self-hosted)",
     timeoutMs: parseInt(process.env.OFF_TIMEOUT_MS ?? "8000", 10),
   },
   corsOrigin: process.env.CORS_ORIGIN ?? "*",

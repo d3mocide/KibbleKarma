@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-nibbles}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-naps}
-      POSTGRES_DB: ${POSTGRES_DB:-nibbles_and_naps}
+      POSTGRES_USER: ${POSTGRES_USER:-kibble}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-karma}
+      POSTGRES_DB: ${POSTGRES_DB:-kibble_karma}
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "${DB_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nibbles} -d ${POSTGRES_DB:-nibbles_and_naps}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kibble} -d ${POSTGRES_DB:-kibble_karma}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -25,12 +25,12 @@ services:
     environment:
       PORT: 4000
       NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER:-nibbles}:${POSTGRES_PASSWORD:-naps}@db:5432/${POSTGRES_DB:-nibbles_and_naps}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kibble}:${POSTGRES_PASSWORD:-karma}@db:5432/${POSTGRES_DB:-kibble_karma}
       JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-string}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
       OFF_BASE_URL: ${OFF_BASE_URL:-https://world.openfoodfacts.org}
-      OFF_USER_AGENT: ${OFF_USER_AGENT:-NibblesAndNaps/1.0 (self-hosted)}
+      OFF_USER_AGENT: ${OFF_USER_AGENT:-KibbleKarma/1.0 (self-hosted)}
       OFF_TIMEOUT_MS: ${OFF_TIMEOUT_MS:-8000}
     ports:
       - "${BACKEND_PORT:-4000}:4000"

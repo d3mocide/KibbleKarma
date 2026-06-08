@@ -9,7 +9,7 @@ async function main() {
   await prisma.$connect();
   const app = createApp();
   app.listen(config.port, () => {
-    logger.info(`Nibbles & Naps API listening on port ${config.port}`, { env: config.nodeEnv });
+    logger.info(`KibbleKarma API listening on port ${config.port}`, { env: config.nodeEnv });
   });
 }
 

@@ -34,7 +34,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
           <div className="text-5xl">🐾</div>
-          <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">Join Nibbles &amp; Naps</h1>
+          <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">Join KibbleKarma</h1>
           <p className="text-cocoa/60">Start a cozy log for your furry friends.</p>
         </div>
         <form onSubmit={onSubmit} className="card space-y-4">

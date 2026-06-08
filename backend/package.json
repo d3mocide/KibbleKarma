@@ -1,7 +1,7 @@
 {
-  "name": "nibbles-and-naps-backend",
+  "name": "kibblekarma-backend",
   "version": "1.0.0",
-  "description": "Backend API for Nibbles & Naps pet wellness log",
+  "description": "Backend API for KibbleKarma pet wellness log",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",

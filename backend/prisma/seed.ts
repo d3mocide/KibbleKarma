@@ -4,11 +4,11 @@ import { computeMealKcal } from "../src/utils/calories";
 
 const prisma = new PrismaClient();
 
-const DEMO_EMAIL = "demo@nibblesandnaps.app";
+const DEMO_EMAIL = "demo@kibblekarma.app";
 const DEMO_PASSWORD = "password123";
 
 async function main() {
-  console.log("Seeding Nibbles & Naps demo data...");
+  console.log("Seeding KibbleKarma demo data...");
 
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
   const user = await prisma.user.upsert({

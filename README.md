@@ -1,8 +1,8 @@
-# 🐾 Nibbles & Naps
+# 🐾 KibbleKarma
 
 A cozy, personal pet wellness log that tracks meals, weight, and basic health
-events so your pets stay happy and healthy. Think "cozy quantified-self for
-pets" — friendly and non-clinical.
+events so your pets stay happy and healthy. Think "CreditKarma for our furry
+friends with paws" — a friendly, non-clinical wellness companion.
 
 - **Manage multiple pets** (dogs, cats, and others).
 - **Define foods** and **log meals** with automatic calorie computation based on
@@ -60,7 +60,7 @@ on startup. To load demo data:
 docker compose exec backend npm run seed
 ```
 
-Demo login → **demo@nibblesandnaps.app** / **password123**
+Demo login → **demo@kibblekarma.app** / **password123**
 
 ## Local development (without Docker)
 
@@ -98,7 +98,7 @@ All configuration is via environment variables. See
 | `JWT_EXPIRES_IN`  | Token lifetime                               | `7d`                             |
 | `CORS_ORIGIN`     | Allowed origins (`*` or comma-separated)     | `*`                              |
 | `OFF_BASE_URL`    | Open Food Facts base URL                     | `https://world.openfoodfacts.org`|
-| `OFF_USER_AGENT`  | User-Agent sent to Open Food Facts           | `NibblesAndNaps/1.0 ...`         |
+| `OFF_USER_AGENT`  | User-Agent sent to Open Food Facts           | `KibbleKarma/1.0 ...`            |
 | `OFF_TIMEOUT_MS`  | Timeout for OFF requests                      | `8000`                           |
 
 ## API overview

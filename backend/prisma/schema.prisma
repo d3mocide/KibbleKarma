@@ -1,4 +1,4 @@
-// Prisma schema for Nibbles & Naps
+// Prisma schema for KibbleKarma
 // PostgreSQL datasource
 
 generator client {

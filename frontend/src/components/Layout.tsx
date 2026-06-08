@@ -14,7 +14,7 @@ export default function Layout() {
       <header className="sticky top-0 z-40 border-b border-sand/70 bg-cream/90 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2 text-lg font-extrabold text-teal-deep">
-            <span className="text-2xl">🐾</span> Nibbles &amp; Naps
+            <span className="text-2xl">🐾</span> KibbleKarma
           </Link>
           <nav className="flex items-center gap-1">
             <NavLink to="/" end className={navClass}>

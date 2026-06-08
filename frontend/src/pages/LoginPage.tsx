@@ -30,7 +30,7 @@ export default function LoginPage() {
         <div className="mb-6 text-center">
           <div className="text-5xl">🐾</div>
           <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">
-            Welcome back to Nibbles &amp; Naps
+            Welcome back to KibbleKarma
           </h1>
           <p className="text-cocoa/60">Cozy wellness tracking for your sleepy snackers.</p>
         </div>
