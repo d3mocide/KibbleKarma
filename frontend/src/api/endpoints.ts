@@ -13,6 +13,10 @@ import type {
 
 // --- Auth ---
 export const authApi = {
+  status: () =>
+    api
+      .get<{ needsSetup: boolean; allowRegistration: boolean }>("/auth/status")
+      .then((r) => r.data),
   register: (email: string, password: string) =>
     api.post<{ token: string; user: User }>("/auth/register", { email, password }).then((r) => r.data),
   login: (email: string, password: string) =>

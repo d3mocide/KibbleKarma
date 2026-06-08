@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../prisma";
 import { signToken, requireAuth } from "../middleware/auth";
 import { HttpError } from "../middleware/error";
+import { config } from "../config";
 
 export const authRouter = Router();
 
@@ -12,9 +13,26 @@ const credentialsSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+// Public: lets the frontend decide whether to show first-run enrollment,
+// normal login, or an open registration link — without exposing any data.
+authRouter.get("/status", async (_req, res) => {
+  const userCount = await prisma.user.count();
+  res.json({
+    needsSetup: userCount === 0,
+    allowRegistration: userCount === 0 || config.allowOpenRegistration,
+  });
+});
+
 authRouter.post("/register", async (req, res) => {
   const { email, password } = credentialsSchema.parse(req.body);
   const normalizedEmail = email.toLowerCase().trim();
+
+  // First user is always allowed (first-run owner enrollment). After that,
+  // registration is closed unless explicitly enabled via env.
+  const userCount = await prisma.user.count();
+  if (userCount > 0 && !config.allowOpenRegistration) {
+    throw new HttpError(403, "Registration is closed. Please sign in instead.");
+  }
 
   const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {

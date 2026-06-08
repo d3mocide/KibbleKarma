@@ -26,4 +26,7 @@ export const config = {
     timeoutMs: parseInt(process.env.OFF_TIMEOUT_MS ?? "8000", 10),
   },
   corsOrigin: process.env.CORS_ORIGIN ?? "*",
+  // When false (default), registration is only allowed for the very first
+  // user (first-run owner enrollment). Set true to allow additional signups.
+  allowOpenRegistration: process.env.ALLOW_OPEN_REGISTRATION === "true",
 } as const;

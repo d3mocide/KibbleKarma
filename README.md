@@ -46,44 +46,46 @@ friends with paws" — a friendly, non-clinical wellness companion.
 └── .env.example
 ```
 
+> A [`Makefile`](./Makefile) wraps every common task. Run **`make help`** to
+> see the full, self-documenting list.
+
 ## Quick start (Docker — recommended)
 
 ```bash
-cp .env.example .env          # adjust secrets as desired
-docker compose up --build
+make up        # builds images and starts db + backend + frontend
 ```
 
-Then open **http://localhost:8080**. The backend runs migrations automatically
-on startup. To load demo data:
+(or `cp .env.example .env && docker compose up --build` if you prefer.)
 
-```bash
-docker compose exec backend npm run seed
-```
+Then open **http://localhost:8080**.
 
-Demo login → **demo@kibblekarma.app** / **password123**
+### First launch → owner enrollment
+
+On first launch the database is empty, so KibbleKarma greets you with a
+**"Welcome — create your owner account"** setup screen. The first account you
+create becomes the owner of the instance. There is no hardcoded admin user.
+
+After the owner exists, public registration is closed by default (set
+`ALLOW_OPEN_REGISTRATION=true` to allow more accounts). The backend runs
+migrations automatically on startup.
+
+> **Optional demo data:** `make seed` loads a sample pet, foods, and logs.
+> The demo login is **demo@kibblekarma.app** / **password123** — handy for a
+> tour, but not required (and not created unless you seed).
 
 ## Local development (without Docker)
 
 You need Node 20+ and a PostgreSQL 16 instance.
 
-### Backend
-
 ```bash
-cd backend
-cp .env.example .env          # set DATABASE_URL, JWT_SECRET
-npm install
-npx prisma migrate dev        # create tables
-npm run seed                  # optional demo data
-npm run dev                   # http://localhost:4000
+make setup           # copy env files, install deps, generate Prisma client
+make db-migrate      # create tables (uses backend/.env DATABASE_URL)
+make dev-backend     # http://localhost:4000   (run in one terminal)
+make dev-frontend    # http://localhost:5173   (run in another; proxies /api)
 ```
 
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev                   # http://localhost:5173 (proxies /api -> :4000)
-```
+`make db-seed` optionally loads demo data. See `make help` for the rest
+(`db-reset`, `db-studio`, `build`, `typecheck`, `logs`, …).
 
 ## Configuration
 
@@ -97,6 +99,7 @@ All configuration is via environment variables. See
 | `JWT_SECRET`      | Secret for signing auth tokens               | —                                |
 | `JWT_EXPIRES_IN`  | Token lifetime                               | `7d`                             |
 | `CORS_ORIGIN`     | Allowed origins (`*` or comma-separated)     | `*`                              |
+| `ALLOW_OPEN_REGISTRATION` | Allow signups after the first owner  | `false`                          |
 | `OFF_BASE_URL`    | Open Food Facts base URL                     | `https://world.openfoodfacts.org`|
 | `OFF_USER_AGENT`  | User-Agent sent to Open Food Facts           | `KibbleKarma/1.0 ...`            |
 | `OFF_TIMEOUT_MS`  | Timeout for OFF requests                      | `8000`                           |
@@ -108,7 +111,8 @@ All endpoints are prefixed with `/api`. Protected routes require an
 
 | Method | Path                                   | Description                          |
 | ------ | -------------------------------------- | ------------------------------------ |
-| POST   | `/auth/register` · `/auth/login`       | Get a JWT                            |
+| GET    | `/auth/status`                         | First-run/registration state (public) |
+| POST   | `/auth/register` · `/auth/login`       | Enroll owner / get a JWT             |
 | GET    | `/auth/me`                             | Current user                        |
 | GET/POST | `/pets`                              | List / create pets                  |
 | GET/PUT/DELETE | `/pets/:id`                    | Pet detail / update / delete        |

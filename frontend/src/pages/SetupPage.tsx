@@ -1,22 +1,28 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiError } from "../api/client";
 import { ErrorBanner } from "../components/ui";
 
-export default function LoginPage() {
-  const { login, allowRegistration } = useAuth();
+// First-run enrollment: shown only when the backend reports no users yet.
+// Creating this account makes you the owner of this KibbleKarma instance.
+export default function SetupPage() {
+  const { register } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    if (password !== confirm) {
+      setError("Passwords don't match");
+      return;
+    }
     setBusy(true);
     try {
-      await login(email, password);
+      await register(email, password);
     } catch (err) {
       setError(apiError(err));
     } finally {
@@ -29,12 +35,16 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
           <div className="text-5xl">🐾</div>
-          <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">
-            Welcome back to KibbleKarma
-          </h1>
-          <p className="text-cocoa/60">Cozy wellness tracking for your sleepy snackers.</p>
+          <h1 className="mt-2 text-2xl font-extrabold text-teal-deep">Welcome to KibbleKarma!</h1>
+          <p className="text-cocoa/60">
+            Let's set up your owner account — this is the first and only account on this
+            instance, so make it yours.
+          </p>
         </div>
         <form onSubmit={onSubmit} className="card space-y-4">
+          <div className="rounded-xl bg-teal-soft/20 px-3 py-2 text-sm font-semibold text-teal-deep">
+            🎉 First-time setup — you're creating the owner account.
+          </div>
           <ErrorBanner message={error} />
           <div>
             <label className="label">Email</label>
@@ -55,20 +65,24 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="current-password"
+              minLength={6}
+              autoComplete="new-password"
+            />
+          </div>
+          <div>
+            <label className="label">Confirm password</label>
+            <input
+              className="input"
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+              autoComplete="new-password"
             />
           </div>
           <button className="btn-primary w-full" disabled={busy}>
-            {busy ? "Snuggling in..." : "Sign in"}
+            {busy ? "Setting things up..." : "Create owner account"}
           </button>
-          {allowRegistration && (
-            <p className="text-center text-sm text-cocoa/60">
-              New here?{" "}
-              <Link to="/register" className="font-semibold text-teal-deep hover:underline">
-                Create an account
-              </Link>
-            </p>
-          )}
         </form>
       </div>
     </div>

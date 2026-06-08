@@ -6,6 +6,8 @@ import type { User } from "../api/types";
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
+  needsSetup: boolean;
+  allowRegistration: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -16,20 +18,31 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [needsSetup, setNeedsSetup] = useState(false);
+  const [allowRegistration, setAllowRegistration] = useState(false);
 
   useEffect(() => {
     const token = getToken();
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    authApi
-      .me()
-      .then((u) => setUser(u))
-      .catch(() => {
-        setToken(null);
-      })
-      .finally(() => setLoading(false));
+    // Status is public and drives the first-run enrollment gate; `me` only
+    // runs when we already hold a token.
+    Promise.all([
+      authApi
+        .status()
+        .then((s) => {
+          setNeedsSetup(s.needsSetup);
+          setAllowRegistration(s.allowRegistration);
+        })
+        .catch(() => {
+          setNeedsSetup(false);
+          setAllowRegistration(false);
+        }),
+      token
+        ? authApi
+            .me()
+            .then((u) => setUser(u))
+            .catch(() => setToken(null))
+        : Promise.resolve(),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -42,6 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { token, user } = await authApi.register(email, password);
     setToken(token);
     setUser(user);
+    // Once the first owner exists, setup is complete.
+    setNeedsSetup(false);
   };
 
   const logout = () => {
@@ -50,7 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, needsSetup, allowRegistration, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
