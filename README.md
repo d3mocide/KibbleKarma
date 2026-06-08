@@ -57,7 +57,7 @@ make up        # builds images and starts db + backend + frontend
 
 (or `cp .env.example .env && docker compose up --build` if you prefer.)
 
-Then open **http://localhost:8080**.
+Then open **http://localhost**.
 
 ### First launch → owner enrollment
 

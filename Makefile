@@ -70,7 +70,7 @@ db-studio: ## Open Prisma Studio to browse data
 ##@ Docker
 up: ## Build images and start all services in the background
 	$(COMPOSE) up -d --build
-	@echo "🐾 KibbleKarma is up: web http://localhost:8080  ·  api http://localhost:4000"
+	@echo "🐾 KibbleKarma is up: http://localhost"
 
 up-fg: ## Start all services in the foreground (stream logs)
 	$(COMPOSE) up --build
