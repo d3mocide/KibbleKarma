@@ -9,7 +9,7 @@ friends with paws" — a friendly, non-clinical wellness companion.
   energy density.
 - **Track weight** and **health events** over time, with charts and trends.
 - **Barcode lookup** that auto-populates food details from
-  [Open Food Facts](https://world.openfoodfacts.org).
+  [Open Pet Food Facts](https://world.openpetfoodfacts.org).
 - **Self-hosted friendly** — runs as a set of Docker containers.
 
 ## Tech stack
@@ -42,7 +42,8 @@ friends with paws" — a friendly, non-clinical wellness companion.
 │       ├── components/       # UI, charts, forms, scanner
 │       ├── pages/            # login, pets, dashboard, foods
 │       └── context/          # auth context
-├── docker-compose.yml
+├── docker-compose.yml       # production stack
+├── docker-compose.dev.yml   # dev overlay (hot reload)
 └── .env.example
 ```
 
@@ -73,25 +74,30 @@ migrations automatically on startup.
 > The demo login is **demo@kibblekarma.app** / **password123** — handy for a
 > tour, but not required (and not created unless you seed).
 
-## Local development (without Docker)
+## Local development (Docker, hot reload)
 
-You need Node 20+ and a PostgreSQL 16 instance.
+The dev stack runs the same containers as production, but the backend
+watch-compiles with `tsx` and the frontend is served by the Vite dev server —
+both with your source bind-mounted, so edits reload live.
 
 ```bash
-make setup           # copy env files, install deps, generate Prisma client
-make db-migrate      # create tables (uses backend/.env DATABASE_URL)
-make dev-backend     # http://localhost:4000   (run in one terminal)
-make dev-frontend    # http://localhost:5173   (run in another; proxies /api)
+make dev        # API http://localhost:4000 · web http://localhost:5173
 ```
 
-`make db-seed` optionally loads demo data. See `make help` for the rest
-(`db-reset`, `db-studio`, `build`, `typecheck`, `logs`, …).
+This layers [`docker-compose.dev.yml`](./docker-compose.dev.yml) over the base
+file (`docker compose -f docker-compose.yml -f docker-compose.dev.yml up`). The
+backend applies migrations on startup; create new ones with `make db-migrate`
+and load demo data with `make db-seed` — both run inside the running container.
+See `make help` for the rest (`dev-bg`, `db-reset`, `db-studio`, `typecheck`, …).
+
+> `make setup` (env file + local `npm install` + Prisma client) is only needed
+> for host-side `make typecheck` / `make build`; it isn't required to run the app.
 
 ## Configuration
 
-All configuration is via environment variables. See
-[`.env.example`](./.env.example) (root, for Docker) and
-[`backend/.env.example`](./backend/.env.example).
+All configuration is via environment variables in a single
+[`.env.example`](./.env.example) at the repo root (Compose assembles
+`DATABASE_URL` from the `POSTGRES_*` values, so it isn't listed separately).
 
 | Variable          | Description                                  | Default                          |
 | ----------------- | -------------------------------------------- | -------------------------------- |
@@ -100,8 +106,8 @@ All configuration is via environment variables. See
 | `JWT_EXPIRES_IN`  | Token lifetime                               | `7d`                             |
 | `CORS_ORIGIN`     | Allowed origins (`*` or comma-separated)     | `*`                              |
 | `ALLOW_OPEN_REGISTRATION` | Allow signups after the first owner  | `false`                          |
-| `OFF_BASE_URL`    | Open Food Facts base URL                     | `https://world.openfoodfacts.org`|
-| `OFF_USER_AGENT`  | User-Agent sent to Open Food Facts           | `KibbleKarma/1.0 ...`            |
+| `OFF_BASE_URL`    | Open Pet Food Facts base URL                 | `https://world.openpetfoodfacts.org`|
+| `OFF_USER_AGENT`  | User-Agent sent to Open Pet Food Facts       | `KibbleKarma/1.0 ...`            |
 | `OFF_TIMEOUT_MS`  | Timeout for OFF requests                      | `8000`                           |
 
 ## API overview
@@ -117,7 +123,7 @@ All endpoints are prefixed with `/api`. Protected routes require an
 | GET/POST | `/pets`                              | List / create pets                  |
 | GET/PUT/DELETE | `/pets/:id`                    | Pet detail / update / delete        |
 | GET/POST | `/foods`                             | List / create foods                 |
-| POST   | `/foods/lookup-by-barcode`             | Barcode → Open Food Facts lookup    |
+| POST   | `/foods/lookup-by-barcode`             | Barcode → Open Pet Food Facts lookup |
 | GET/PUT/DELETE | `/foods/:id`                   | Food detail (OFF foods read-only)   |
 | GET/POST | `/pets/:petId/foods`                 | Pet diet (food profiles)            |
 | PUT/DELETE | `/pet-food-profiles/:id`           | Update / remove a diet entry        |

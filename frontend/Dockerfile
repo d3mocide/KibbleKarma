@@ -1,8 +1,10 @@
 # Frontend Dockerfile: build with Vite, serve with nginx
-FROM node:22-alpine AS build
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
+
+FROM deps AS build
 COPY . .
 # API calls go to /api which nginx proxies to the backend.
 RUN npm run build
