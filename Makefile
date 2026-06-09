@@ -2,11 +2,12 @@
 # Run `make` or `make help` to see all available commands.
 
 COMPOSE ?= docker compose
+DEV_COMPOSE := $(COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml
 BACKEND  := backend
 FRONTEND := frontend
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env install dev-backend dev-frontend build typecheck \
+.PHONY: help setup env install dev dev-bg dev-down dev-logs build typecheck \
         db-generate db-migrate db-deploy db-seed db-reset db-studio \
         up up-fg down stop restart logs ps rebuild seed migrate reset-volumes \
         clean
@@ -21,26 +22,32 @@ help: ## Show this help
 	@echo ""
 
 ##@ Setup
-setup: env install db-generate ## First-time local setup (env files, deps, Prisma client)
-	@echo "✅ Setup complete. Next: 'make up' (Docker) or 'make dev-backend' + 'make dev-frontend'."
+setup: env install db-generate ## First-time setup (env file, local deps for type-checking, Prisma client)
+	@echo "✅ Setup complete. Next: 'make dev' (hot-reload Docker) or 'make up' (production)."
 
-env: ## Create .env files from examples if they don't exist
+env: ## Create .env from the example if it doesn't exist
 	@test -f .env || (cp .env.example .env && echo "Created .env")
-	@test -f $(BACKEND)/.env || (cp $(BACKEND)/.env.example $(BACKEND)/.env && echo "Created backend/.env")
-	@echo "Env files ready."
+	@echo "Env file ready."
 
-install: ## Install backend and frontend dependencies
+install: ## Install backend and frontend deps locally (for typecheck/build only)
 	cd $(BACKEND) && npm install
 	cd $(FRONTEND) && npm install
 
-##@ Local development
-dev-backend: ## Run the API in watch mode (http://localhost:4000)
-	cd $(BACKEND) && npm run dev
+##@ Local development (Docker, hot reload)
+dev: ## Start the dev stack with hot reload — API :4000, web :5173 (Ctrl-C to stop)
+	$(DEV_COMPOSE) up --build
 
-dev-frontend: ## Run the web app dev server (http://localhost:5173)
-	cd $(FRONTEND) && npm run dev
+dev-bg: ## Same as 'dev' but detached
+	$(DEV_COMPOSE) up -d --build
+	@echo "🐾 Dev stack up: web http://localhost:5173 · API http://localhost:4000"
 
-build: ## Type-check and build backend + frontend
+dev-down: ## Stop and remove the dev stack (keeps the database volume)
+	$(DEV_COMPOSE) down
+
+dev-logs: ## Tail logs from the dev stack
+	$(DEV_COMPOSE) logs -f --tail=100
+
+build: ## Type-check and build backend + frontend locally
 	cd $(BACKEND) && npm run build
 	cd $(FRONTEND) && npm run build
 
@@ -48,24 +55,24 @@ typecheck: ## Type-check both packages without emitting
 	cd $(BACKEND) && npx tsc --noEmit
 	cd $(FRONTEND) && npx tsc --noEmit
 
-##@ Database (local, uses backend/.env)
-db-generate: ## Generate the Prisma client
+##@ Database (runs inside the dev backend container)
+db-generate: ## Generate the Prisma client locally (so 'make typecheck' sees types)
 	cd $(BACKEND) && npx prisma generate
 
 db-migrate: ## Create & apply a dev migration (optional: NAME=description)
-	cd $(BACKEND) && npx prisma migrate dev $(if $(NAME),--name $(NAME),)
+	$(DEV_COMPOSE) exec backend npx prisma migrate dev $(if $(NAME),--name $(NAME),)
 
 db-deploy: ## Apply pending migrations (production-style)
-	cd $(BACKEND) && npx prisma migrate deploy
+	$(DEV_COMPOSE) exec backend npx prisma migrate deploy
 
 db-seed: ## Load demo data (pet, foods, weights, meals)
-	cd $(BACKEND) && npm run seed
+	$(DEV_COMPOSE) exec backend npm run seed
 
 db-reset: ## Drop, recreate, migrate and re-seed the database
-	cd $(BACKEND) && npx prisma migrate reset
+	$(DEV_COMPOSE) exec backend npx prisma migrate reset
 
-db-studio: ## Open Prisma Studio to browse data
-	cd $(BACKEND) && npx prisma studio
+db-studio: ## Open Prisma Studio at http://localhost:5555
+	$(DEV_COMPOSE) exec backend npx prisma studio
 
 ##@ Docker
 up: ## Build images and start all services in the background

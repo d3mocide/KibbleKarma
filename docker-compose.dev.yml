@@ -1,0 +1,42 @@
+# Development overlay — hot-reload backend + Vite dev server, source-mounted.
+#
+#   make dev          # foreground, streams logs
+#   make dev-bg       # detached
+#   # equivalently:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#
+# Production stays the plain `docker compose up` (docker-compose.yml on its own).
+# The `!override` tags replace the base service's value instead of merging it
+# (Docker Compose v2.24+), so the dev ports don't pile up on the prod ones.
+services:
+  backend:
+    build:
+      context: ./backend
+      target: deps          # deps stage ships the dev dependencies (tsx, prisma)
+    environment:
+      NODE_ENV: development
+    # Generate the client, apply migrations, then watch-compile the source.
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev"
+    volumes:
+      - ./backend:/app                          # live source for tsx watch
+      - backend_node_modules:/app/node_modules  # keep the image's installed deps
+    ports:
+      - "4000:4000"   # API, for direct access / tooling
+      - "5555:5555"   # Prisma Studio (make db-studio)
+
+  frontend:
+    build:
+      context: ./frontend
+      target: deps          # deps stage: node_modules without a throwaway prod build
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:4000
+    command: npm run dev -- --host
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports: !override
+      - "5173:5173"   # Vite dev server (replaces the prod :80 mapping)
+
+volumes:
+  backend_node_modules:
+  frontend_node_modules:
