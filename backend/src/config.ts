@@ -19,7 +19,7 @@ export const config = {
     expiresIn: process.env.JWT_EXPIRES_IN ?? "7d",
   },
   off: {
-    baseUrl: process.env.OFF_BASE_URL ?? "https://world.openfoodfacts.org",
+    baseUrl: process.env.OFF_BASE_URL ?? "https://world.openpetfoodfacts.org",
     userAgent:
       process.env.OFF_USER_AGENT ??
       "KibbleKarma/1.0 (self-hosted)",

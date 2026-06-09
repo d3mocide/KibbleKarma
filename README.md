@@ -9,7 +9,7 @@ friends with paws" — a friendly, non-clinical wellness companion.
   energy density.
 - **Track weight** and **health events** over time, with charts and trends.
 - **Barcode lookup** that auto-populates food details from
-  [Open Food Facts](https://world.openfoodfacts.org).
+  [Open Pet Food Facts](https://world.openpetfoodfacts.org).
 - **Self-hosted friendly** — runs as a set of Docker containers.
 
 ## Tech stack
@@ -100,8 +100,8 @@ All configuration is via environment variables. See
 | `JWT_EXPIRES_IN`  | Token lifetime                               | `7d`                             |
 | `CORS_ORIGIN`     | Allowed origins (`*` or comma-separated)     | `*`                              |
 | `ALLOW_OPEN_REGISTRATION` | Allow signups after the first owner  | `false`                          |
-| `OFF_BASE_URL`    | Open Food Facts base URL                     | `https://world.openfoodfacts.org`|
-| `OFF_USER_AGENT`  | User-Agent sent to Open Food Facts           | `KibbleKarma/1.0 ...`            |
+| `OFF_BASE_URL`    | Open Pet Food Facts base URL                 | `https://world.openpetfoodfacts.org`|
+| `OFF_USER_AGENT`  | User-Agent sent to Open Pet Food Facts       | `KibbleKarma/1.0 ...`            |
 | `OFF_TIMEOUT_MS`  | Timeout for OFF requests                      | `8000`                           |
 
 ## API overview
