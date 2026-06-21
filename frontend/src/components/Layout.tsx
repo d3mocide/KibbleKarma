@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { Settings } from "lucide-react";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -38,6 +39,9 @@ export default function Layout() {
             </NavLink>
             <NavLink to="/foods" className={navClass}>
               foods
+            </NavLink>
+            <NavLink to="/settings" className={navClass} title="Settings" aria-label="Settings">
+              <Settings className="h-4 w-4" />
             </NavLink>
             <button
               onClick={logout}

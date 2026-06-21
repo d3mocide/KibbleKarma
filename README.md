@@ -119,12 +119,12 @@ All endpoints are prefixed with `/api`. Protected routes require an
 | ------ | -------------------------------------- | ------------------------------------ |
 | GET    | `/auth/status`                         | First-run/registration state (public) |
 | POST   | `/auth/register` · `/auth/login`       | Enroll owner / get a JWT             |
-| GET    | `/auth/me`                             | Current user                        |
+| GET/PATCH | `/auth/me`                          | Current user / update preferences (units) |
 | GET/POST | `/pets`                              | List / create pets                  |
 | GET/PUT/DELETE | `/pets/:id`                    | Pet detail / update / delete        |
 | GET/POST | `/foods`                             | List / create foods                 |
 | POST   | `/foods/lookup-by-barcode`             | Barcode → Open Pet Food Facts lookup |
-| GET/PUT/DELETE | `/foods/:id`                   | Food detail (OFF foods read-only)   |
+| GET/PUT/DELETE | `/foods/:id`                   | Food detail / edit / delete (per-user; OFF foods can't be edited) |
 | GET/POST | `/pets/:petId/foods`                 | Pet diet (food profiles)            |
 | PUT/DELETE | `/pet-food-profiles/:id`           | Update / remove a diet entry        |
 | GET/POST | `/pets/:petId/meals`                 | List / log meals                    |
@@ -148,9 +148,18 @@ available rule:
 ## Notes
 
 - **Authorization:** users only ever see and modify their own pets, foods, and
-  logs. Open Food Facts foods are shared and read-only.
+  logs. Each account has its own private food catalog — including entries
+  created from barcode/Open Food Facts lookups (the OFF data itself is still
+  read-only and can't be edited, only added or removed from your own list).
 - **Open Food Facts:** if a product has no energy data the food is still
   created with empty energy fields so it can be edited manually. Remote
   failures and "not found" barcodes return explicit, friendly errors.
-- **Multi-user ready:** the data model is keyed by user, so although v1 is
-  designed for a single user, multiple accounts work out of the box.
+- **Multi-user:** the data model is fully per-user — every pet, food, and log
+  is scoped to its owner, and accounts are isolated from one another. The first
+  account is the owner; additional users can sign up once you set
+  `ALLOW_OPEN_REGISTRATION=true` (otherwise public registration stays closed
+  after the owner is enrolled).
+- **Units:** all data is stored in metric (kg / grams / kcal). Each user picks
+  metric or imperial display under **Settings** (new accounts default to
+  imperial); the frontend converts weights and food amounts for display and
+  back to metric on save. Energy is always in kcal.

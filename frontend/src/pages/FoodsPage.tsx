@@ -6,7 +6,7 @@ import type { Food } from "../api/types";
 import { EmptyState, ErrorBanner, Modal, Spinner, Button, Chip, TextField, SelectField } from "../components/ui";
 import BarcodeScanner from "../components/BarcodeScanner";
 import { num } from "../utils/format";
-import { Plus, ScanBarcode, Search } from "lucide-react";
+import { Plus, ScanBarcode, Search, Trash2 } from "lucide-react";
 
 export default function FoodsPage() {
   const [foods, setFoods] = useState<Food[]>([]);
@@ -30,6 +30,17 @@ export default function FoodsPage() {
     load("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const remove = async (food: Food) => {
+    if (!confirm(`Delete "${food.name}"? This can't be undone.`)) return;
+    setError("");
+    try {
+      await foodsApi.remove(food.id);
+      setFoods((prev) => prev.filter((x) => x.id !== food.id));
+    } catch (err) {
+      setError(apiError(err));
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -77,21 +88,32 @@ export default function FoodsPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {foods.map((f) => (
-            <Link key={f.id} to={`/foods/${f.id}`} className="card hover:shadow-cozy-lg transition duration-200">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-extrabold text-charcoal-900 leading-tight">{f.name}</h3>
-                  {f.brand && <p className="text-sm text-text-muted mt-0.5">{f.brand}</p>}
+            <div key={f.id} className="relative">
+              <Link to={`/foods/${f.id}`} className="card block h-full hover:shadow-cozy-lg transition duration-200">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-extrabold text-charcoal-900 leading-tight">{f.name}</h3>
+                    {f.brand && <p className="text-sm text-text-muted mt-0.5">{f.brand}</p>}
+                  </div>
+                  <Chip tone={f.source === "open_food_facts" ? "butter" : "sage"}>
+                    {f.source === "open_food_facts" ? "OFF" : "Manual"}
+                  </Chip>
                 </div>
-                <Chip tone={f.source === "open_food_facts" ? "butter" : "sage"}>
-                  {f.source === "open_food_facts" ? "OFF" : "Manual"}
-                </Chip>
-              </div>
-              <p className="mt-3 text-sm text-charcoal-700">
-                {f.energyKcalPer100g != null ? `${num(f.energyKcalPer100g)} kcal / 100g` : "No energy data"}
-              </p>
-              {f.barcode && <p className="text-xs text-text-faint mt-1">#{f.barcode}</p>}
-            </Link>
+                <p className="mt-3 text-sm text-charcoal-700">
+                  {f.energyKcalPer100g != null ? `${num(f.energyKcalPer100g)} kcal / 100g` : "No energy data"}
+                </p>
+                {f.barcode && <p className="text-xs text-text-faint mt-1 pr-8">#{f.barcode}</p>}
+              </Link>
+              <button
+                type="button"
+                onClick={() => remove(f)}
+                aria-label={`Delete ${f.name}`}
+                title="Delete food"
+                className="absolute bottom-3 right-3 rounded-full p-2 text-text-faint hover:text-alert hover:bg-terracotta-50 transition"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           ))}
         </div>
       )}

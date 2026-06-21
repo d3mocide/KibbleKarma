@@ -31,6 +31,7 @@ import {
   type WeightFormValues,
 } from "../components/LogForms";
 import { ageFromDob, formatDateTime, num, todayStr } from "../utils/format";
+import { useUnits } from "../hooks/useUnits";
 import { 
   ArrowLeft, 
   Bone, 
@@ -75,6 +76,7 @@ export function HealthEventIcon({ type, className = "h-4.5 w-4.5" }: { type: str
 export default function PetDashboardPage() {
   const { petId = "" } = useParams();
   const navigate = useNavigate();
+  const u = useUnits();
 
   const [pet, setPet] = useState<Pet | null>(null);
   const [weights, setWeights] = useState<WeightLog[]>([]);
@@ -140,7 +142,7 @@ export default function PetDashboardPage() {
       const meal = await mealsApi.create(petId, {
         foodId: v.foodId,
         loggedAt: v.loggedAt ? new Date(v.loggedAt).toISOString() : undefined,
-        amountGrams: v.amountGrams ? Number(v.amountGrams) : null,
+        amountGrams: v.amountGrams ? u.toG(Number(v.amountGrams)) : null,
         amountServings: v.amountServings ? Number(v.amountServings) : null,
         notes: v.notes || null,
       });
@@ -162,7 +164,7 @@ export default function PetDashboardPage() {
     setFormError("");
     try {
       await weightsApi.create(petId, {
-        weightKg: Number(v.weightKg),
+        weightKg: u.toKg(Number(v.weightKg)),
         weighedAt: v.weighedAt ? new Date(v.weighedAt).toISOString() : undefined,
         bodyConditionScore: v.bodyConditionScore ? Number(v.bodyConditionScore) : null,
         notes: v.notes || null,
@@ -199,7 +201,7 @@ export default function PetDashboardPage() {
     setSubmitting(true);
     setFormError("");
     try {
-      await petsApi.update(petId, petFormToPayload(v));
+      await petsApi.update(petId, petFormToPayload(v, u));
       closeModal();
       await load();
     } catch (err) {
@@ -338,7 +340,7 @@ export default function PetDashboardPage() {
               {trend && (
                 <Chip tone="neutral" className="flex items-center gap-1">
                   {trend.changeKg >= 0 ? <TrendingUp className="h-3.5 w-3.5 text-sage-600" /> : <TrendingDown className="h-3.5 w-3.5 text-terracotta-500" />}
-                  <span>{num(Math.abs(trend.changeKg), 2)} kg / {trend.days}d</span>
+                  <span>{u.weight(Math.abs(trend.changeKg), 2)} / {trend.days}d</span>
                 </Chip>
               )}
             </div>
@@ -364,8 +366,8 @@ export default function PetDashboardPage() {
               <StatMeter value={summary?.totalKcal ?? 0} max={summary?.targetKcal ?? null} />
 
               <div className="flex items-baseline justify-between">
-                <span className="text-text-muted">Grams</span>
-                <span className="font-bold text-charcoal-900">{num(summary?.totalGrams, 1)} g</span>
+                <span className="text-text-muted">Amount</span>
+                <span className="font-bold text-charcoal-900">{u.mass(summary?.totalGrams, 1)}</span>
               </div>
             </div>
             <p className={`mt-4 rounded-md px-3 py-2 text-sm font-semibold ${trackTone}`}>{trackMsg}</p>
@@ -424,7 +426,7 @@ export default function PetDashboardPage() {
                     <p className="font-bold text-charcoal-900">{m.food.name}</p>
                     <p className="text-xs text-text-muted">
                       {formatDateTime(m.loggedAt)} ·{" "}
-                      {m.amountGrams ? `${num(m.amountGrams, 1)} g` : `${num(m.amountServings, 1)} servings`}
+                      {m.amountGrams ? u.mass(m.amountGrams, 1) : `${num(m.amountServings, 1)} servings`}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
@@ -463,7 +465,7 @@ export default function PetDashboardPage() {
               {[...weights].reverse().map((w) => (
                 <li key={w.id} className="flex items-center justify-between py-2.5">
                   <div>
-                    <p className="font-bold text-charcoal-900">{num(w.weightKg, 2)} kg</p>
+                    <p className="font-bold text-charcoal-900">{u.weight(w.weightKg, 2)}</p>
                     <p className="text-xs text-text-muted">
                       {formatDateTime(w.weighedAt)}
                       {w.bodyConditionScore ? ` · BCS ${w.bodyConditionScore}` : ""}

@@ -5,10 +5,12 @@ import { apiError } from "../api/client";
 import type { Pet } from "../api/types";
 import { EmptyState, ErrorBanner, Modal, Spinner, Avatar, Button } from "../components/ui";
 import PetForm, { petFormToPayload, type PetFormValues } from "../components/PetForm";
-import { ageFromDob, num } from "../utils/format";
+import { ageFromDob } from "../utils/format";
+import { useUnits } from "../hooks/useUnits";
 import { Plus } from "lucide-react";
 
 export default function PetsListPage() {
+  const u = useUnits();
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -35,7 +37,7 @@ export default function PetsListPage() {
     setSubmitting(true);
     setFormError("");
     try {
-      await petsApi.create(petFormToPayload(values));
+      await petsApi.create(petFormToPayload(values, u));
       setModalOpen(false);
       await load();
     } catch (err) {
@@ -96,7 +98,7 @@ export default function PetsListPage() {
               <div className="mt-4 flex items-center justify-between rounded-md bg-oat-200/60 px-3 py-2 text-sm text-text-muted">
                 <span>Last weigh-in</span>
                 <span className="font-bold text-terracotta-500">
-                  {pet.lastWeight ? `${num(pet.lastWeight.weightKg, 2)} kg` : "—"}
+                  {pet.lastWeight ? u.weight(pet.lastWeight.weightKg, 2) : "—"}
                 </span>
               </div>
             </Link>

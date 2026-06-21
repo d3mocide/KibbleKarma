@@ -35,8 +35,8 @@ foodsRouter.get("/", async (req, res) => {
   const category = typeof req.query.category === "string" ? req.query.category.trim() : "";
 
   const where: Prisma.FoodWhereInput = {
-    // Foods owned by the user OR shared (no owner / OFF-sourced).
-    OR: [{ userId: req.user!.userId }, { userId: null }],
+    // Foods are per-user: each account has its own catalog.
+    userId: req.user!.userId,
   };
   const and: Prisma.FoodWhereInput[] = [];
   if (search) {
@@ -76,11 +76,11 @@ foodsRouter.post("/lookup-by-barcode", async (req, res) => {
   const { barcode } = barcodeSchema.parse(req.body);
   const trimmed = barcode.trim();
 
-  // Return an existing record (user's own or shared) if we already have it.
+  // Return the user's existing record for this barcode if we already have it.
   const existing = await prisma.food.findFirst({
     where: {
       barcode: trimmed,
-      OR: [{ userId: req.user!.userId }, { userId: null }],
+      userId: req.user!.userId,
     },
   });
   if (existing) {
@@ -91,7 +91,7 @@ foodsRouter.post("/lookup-by-barcode", async (req, res) => {
     const mapped = await lookupBarcode(trimmed);
     const food = await prisma.food.create({
       data: {
-        userId: null, // OFF-sourced foods are shared / read-only
+        userId: req.user!.userId, // each user owns their own catalog entry
         name: mapped.name,
         brand: mapped.brand,
         category: mapped.category,
@@ -124,7 +124,7 @@ foodsRouter.get("/:id", async (req, res) => {
 
 foodsRouter.put("/:id", async (req, res) => {
   const food = await assertFoodAccessible(req.params.id, req.user!.userId);
-  if (food.userId === null) {
+  if (food.source === "open_food_facts") {
     throw new HttpError(403, "Open Food Facts foods are read-only and cannot be edited");
   }
   const data = withDerived(foodBodySchema.parse(req.body));
@@ -133,13 +133,11 @@ foodsRouter.put("/:id", async (req, res) => {
 });
 
 foodsRouter.delete("/:id", async (req, res) => {
-  const food = await assertFoodAccessible(req.params.id, req.user!.userId);
-  if (food.userId === null) {
-    throw new HttpError(403, "Shared foods cannot be deleted");
-  }
-  if (food.userId !== req.user!.userId) {
-    throw new HttpError(403, "You can only delete your own foods");
-  }
+  // assertFoodAccessible only resolves the user's own foods or shared/OFF
+  // foods, so any food the user can see here may be removed from the catalog.
+  // Foods still referenced by meal logs are protected by the FK constraint
+  // below and surface as a 409.
+  await assertFoodAccessible(req.params.id, req.user!.userId);
   try {
     await prisma.food.delete({ where: { id: req.params.id } });
   } catch {

@@ -6,6 +6,7 @@ import type {
   MealLog,
   Pet,
   PetFoodProfile,
+  UnitSystem,
   User,
   WeightLog,
   WeightTrend,
@@ -22,6 +23,8 @@ export const authApi = {
   login: (email: string, password: string) =>
     api.post<{ token: string; user: User }>("/auth/login", { email, password }).then((r) => r.data),
   me: () => api.get<{ user: User }>("/auth/me").then((r) => r.data.user),
+  updatePreferences: (data: { unitSystem: UnitSystem }) =>
+    api.patch<{ user: User }>("/auth/me", data).then((r) => r.data.user),
 };
 
 // --- Pets ---
