@@ -9,6 +9,7 @@ import PetsListPage from "./pages/PetsListPage";
 import PetDashboardPage from "./pages/PetDashboardPage";
 import FoodsPage from "./pages/FoodsPage";
 import FoodDetailPage from "./pages/FoodDetailPage";
+import SettingsPage from "./pages/SettingsPage";
 import type { ReactNode } from "react";
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/pets/:petId" element={<PetDashboardPage />} />
         <Route path="/foods" element={<FoodsPage />} />
         <Route path="/foods/:foodId" element={<FoodDetailPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

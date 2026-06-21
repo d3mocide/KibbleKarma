@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { Food } from "../api/types";
 import { ErrorBanner, TextField, SelectField, Button } from "./ui";
 import { toLocalInputValue } from "../utils/format";
+import { useUnits } from "../hooks/useUnits";
 
 // --- Meal form ---
 export interface MealFormValues {
@@ -23,6 +24,7 @@ export function MealForm({
   submitting: boolean;
   error: string;
 }) {
+  const u = useUnits();
   const [v, setV] = useState<MealFormValues>({
     foodId: foods[0]?.id ?? "",
     loggedAt: toLocalInputValue(),
@@ -58,14 +60,14 @@ export function MealForm({
       </SelectField>
 
       <div className="grid grid-cols-2 gap-3">
-        <TextField 
-          type="number" 
-          step="0.1" 
-          min="0" 
-          label="Amount (grams)" 
-          value={v.amountGrams} 
-          onChange={(e) => set("amountGrams", e.target.value)} 
-          placeholder="e.g. 90" 
+        <TextField
+          type="number"
+          step="0.1"
+          min="0"
+          label={`Amount (${u.massUnit})`}
+          value={v.amountGrams}
+          onChange={(e) => set("amountGrams", e.target.value)}
+          placeholder={u.system === "imperial" ? "e.g. 3.2" : "e.g. 90"}
         />
         
         <TextField 
@@ -121,6 +123,7 @@ export function WeightForm({
   submitting: boolean;
   error: string;
 }) {
+  const u = useUnits();
   const [v, setV] = useState<WeightFormValues>({
     weightKg: "",
     weighedAt: toLocalInputValue(),
@@ -139,14 +142,14 @@ export function WeightForm({
       <ErrorBanner message={error} />
       
       <div className="grid grid-cols-2 gap-3">
-        <TextField 
-          type="number" 
-          step="0.01" 
-          min="0" 
-          label="Weight (kg)" 
-          value={v.weightKg} 
-          onChange={(e) => set("weightKg", e.target.value)} 
-          required 
+        <TextField
+          type="number"
+          step="0.01"
+          min="0"
+          label={`Weight (${u.weightUnit})`}
+          value={v.weightKg}
+          onChange={(e) => set("weightKg", e.target.value)}
+          required
         />
         
         <SelectField 

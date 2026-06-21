@@ -10,8 +10,12 @@ import {
   YAxis,
 } from "recharts";
 import type { Pet, WeightLog } from "../api/types";
+import { useUnits } from "../hooks/useUnits";
+import { num } from "../utils/format";
 
 export default function WeightChart({ pet, weights }: { pet: Pet; weights: WeightLog[] }) {
+  const u = useUnits();
+
   if (weights.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center text-cocoa/50">
@@ -22,12 +26,15 @@ export default function WeightChart({ pet, weights }: { pet: Pet; weights: Weigh
 
   const data = weights.map((w) => ({
     date: new Date(w.weighedAt).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-    weight: w.weightKg,
+    weight: u.fromKg(w.weightKg),
   }));
 
-  const weightsOnly = weights.map((w) => w.weightKg);
-  const min = pet.idealWeightMinKg ?? Math.min(...weightsOnly);
-  const max = pet.idealWeightMaxKg ?? Math.max(...weightsOnly);
+  const idealMin = pet.idealWeightMinKg != null ? u.fromKg(pet.idealWeightMinKg) : null;
+  const idealMax = pet.idealWeightMaxKg != null ? u.fromKg(pet.idealWeightMaxKg) : null;
+
+  const weightsOnly = weights.map((w) => u.fromKg(w.weightKg));
+  const min = idealMin ?? Math.min(...weightsOnly);
+  const max = idealMax ?? Math.max(...weightsOnly);
   const padding = Math.max(0.5, (max - min) * 0.4);
 
   return (
@@ -44,13 +51,13 @@ export default function WeightChart({ pet, weights }: { pet: Pet; weights: Weigh
         <YAxis
           domain={[Math.floor(min - padding), Math.ceil(max + padding)]}
           tick={{ fill: "#3D405B", fontSize: 12 }}
-          unit=" kg"
+          unit={` ${u.weightUnit}`}
           width={56}
         />
-        {pet.idealWeightMinKg != null && pet.idealWeightMaxKg != null && (
+        {idealMin != null && idealMax != null && (
           <ReferenceArea
-            y1={pet.idealWeightMinKg}
-            y2={pet.idealWeightMaxKg}
+            y1={idealMin}
+            y2={idealMax}
             fill="#FDF3EF"
             fillOpacity={0.7}
             label={{ value: "ideal range", fill: "#B95A40", fontSize: 11, position: "insideTopRight" }}
@@ -58,7 +65,7 @@ export default function WeightChart({ pet, weights }: { pet: Pet; weights: Weigh
         )}
         <Tooltip
           contentStyle={{ borderRadius: 16, border: "none", backgroundColor: "#FFFFFF", boxShadow: "0 4px 20px rgba(91,74,66,0.08)" }}
-          formatter={(value: number) => [`${value} kg`, "Weight"]}
+          formatter={(value: number) => [`${num(value, 2)} ${u.weightUnit}`, "Weight"]}
         />
         <Area type="monotone" dataKey="weight" stroke="none" fill="url(#weightFill)" />
         <Line

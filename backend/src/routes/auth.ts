@@ -45,7 +45,10 @@ authRouter.post("/register", async (req, res) => {
   });
 
   const token = signToken({ userId: user.id, email: user.email });
-  res.status(201).json({ token, user: { id: user.id, email: user.email } });
+  res.status(201).json({
+    token,
+    user: { id: user.id, email: user.email, unitSystem: user.unitSystem },
+  });
 });
 
 authRouter.post("/login", async (req, res) => {
@@ -63,16 +66,34 @@ authRouter.post("/login", async (req, res) => {
   }
 
   const token = signToken({ userId: user.id, email: user.email });
-  res.json({ token, user: { id: user.id, email: user.email } });
+  res.json({
+    token,
+    user: { id: user.id, email: user.email, unitSystem: user.unitSystem },
+  });
 });
 
 authRouter.get("/me", requireAuth, async (req, res) => {
   const user = await prisma.user.findUnique({
     where: { id: req.user!.userId },
-    select: { id: true, email: true, createdAt: true },
+    select: { id: true, email: true, unitSystem: true, createdAt: true },
   });
   if (!user) {
     throw new HttpError(404, "User not found");
   }
+  res.json({ user });
+});
+
+// Update the signed-in user's preferences (currently just the unit system).
+const preferencesSchema = z.object({
+  unitSystem: z.enum(["metric", "imperial"]),
+});
+
+authRouter.patch("/me", requireAuth, async (req, res) => {
+  const data = preferencesSchema.parse(req.body);
+  const user = await prisma.user.update({
+    where: { id: req.user!.userId },
+    data,
+    select: { id: true, email: true, unitSystem: true },
+  });
   res.json({ user });
 });

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { authApi } from "../api/endpoints";
 import { getToken, setToken } from "../api/client";
-import type { User } from "../api/types";
+import type { UnitSystem, User } from "../api/types";
 
 interface AuthContextValue {
   user: User | null;
@@ -10,6 +10,7 @@ interface AuthContextValue {
   allowRegistration: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
+  setUnitSystem: (unitSystem: UnitSystem) => Promise<void>;
   logout: () => void;
 }
 
@@ -59,6 +60,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setNeedsSetup(false);
   };
 
+  const setUnitSystem = async (unitSystem: UnitSystem) => {
+    const updated = await authApi.updatePreferences({ unitSystem });
+    setUser(updated);
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -66,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, needsSetup, allowRegistration, login, register, logout }}
+      value={{ user, loading, needsSetup, allowRegistration, login, register, setUnitSystem, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,6 +1,7 @@
 export type Species = "dog" | "cat" | "other";
 export type Sex = "male" | "female" | "unknown";
 export type FoodSource = "manual" | "open_food_facts";
+export type UnitSystem = "metric" | "imperial";
 export type HealthEventType =
   | "vet_visit"
   | "symptom"
@@ -11,6 +12,7 @@ export type HealthEventType =
 export interface User {
   id: string;
   email: string;
+  unitSystem: UnitSystem;
 }
 
 export interface WeightLog {

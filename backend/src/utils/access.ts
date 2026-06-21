@@ -10,11 +10,12 @@ export async function assertPetOwnership(petId: string, userId: string) {
   return pet;
 }
 
-// Validate that a food is usable by the user: either owned by them or a
-// shared/external (OFF) food with no owner.
+// Validate that a food is usable by the user. Foods are per-user: each user
+// owns their own catalog entries, including ones created from barcode/OFF
+// lookups.
 export async function assertFoodAccessible(foodId: string, userId: string) {
   const food = await prisma.food.findUnique({ where: { id: foodId } });
-  if (!food || (food.userId !== null && food.userId !== userId)) {
+  if (!food || food.userId !== userId) {
     throw new HttpError(404, "Food not found");
   }
   return food;

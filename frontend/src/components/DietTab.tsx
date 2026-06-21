@@ -4,9 +4,11 @@ import { apiError } from "../api/client";
 import type { Food, PetFoodProfile } from "../api/types";
 import { EmptyState, ErrorBanner, Modal, Spinner, Button, Chip, TextField, SelectField } from "./ui";
 import { num } from "../utils/format";
+import { useUnits } from "../hooks/useUnits";
 import { Plus, Trash2 } from "lucide-react";
 
 export default function DietTab({ petId }: { petId: string }) {
+  const u = useUnits();
   const [profiles, setProfiles] = useState<PetFoodProfile[]>([]);
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export default function DietTab({ petId }: { petId: string }) {
         foodId: form.foodId,
         isPrimary: form.isPrimary,
         targetDailyKcal: form.targetDailyKcal ? Number(form.targetDailyKcal) : null,
-        targetDailyGrams: form.targetDailyGrams ? Number(form.targetDailyGrams) : null,
+        targetDailyGrams: form.targetDailyGrams ? u.toG(Number(form.targetDailyGrams)) : null,
         mealsPerDay: form.mealsPerDay ? Number(form.mealsPerDay) : null,
         notes: form.notes || null,
       });
@@ -105,8 +107,10 @@ export default function DietTab({ petId }: { petId: string }) {
                     <dd className="font-bold text-charcoal-900">{num(p.targetDailyKcal)}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-faint">Daily g</dt>
-                    <dd className="font-bold text-charcoal-900">{num(p.targetDailyGrams)}</dd>
+                    <dt className="text-text-faint">Daily {u.massUnit}</dt>
+                    <dd className="font-bold text-charcoal-900">
+                      {p.targetDailyGrams != null ? num(u.fromG(p.targetDailyGrams), u.system === "imperial" ? 1 : 0) : "—"}
+                    </dd>
                   </div>
                   <div>
                     <dt className="text-text-faint">Meals/day</dt>
@@ -115,7 +119,7 @@ export default function DietTab({ petId }: { petId: string }) {
                 </dl>
                 {perMeal && (
                   <p className="mt-3 rounded-md bg-oat-200/60 px-3 py-2 text-sm text-charcoal-700">
-                    ≈ <b>{num(perMeal, 1)} g</b> per meal
+                    ≈ <b>{u.mass(perMeal, 1)}</b> per meal
                   </p>
                 )}
                 <div className="mt-4 flex justify-between items-center">
@@ -175,7 +179,7 @@ export default function DietTab({ petId }: { petId: string }) {
             <TextField
               type="number"
               min="0"
-              label="Daily grams"
+              label={`Daily ${u.massUnit}`}
               value={form.targetDailyGrams}
               onChange={(e) => setForm({ ...form, targetDailyGrams: e.target.value })}
             />
