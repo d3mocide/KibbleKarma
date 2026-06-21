@@ -187,16 +187,16 @@ export default function FoodDetailPage() {
             </div>
           )}
 
-          {!readOnly && (
-            <div className="flex gap-2 pt-2 border-t border-oat-300">
+          <div className="flex gap-2 pt-2 border-t border-oat-300">
+            {!readOnly && (
               <Button onClick={() => setEditing(true)}>
                 Edit
               </Button>
-              <Button variant="ghost" className="text-alert hover:bg-terracotta-50" onClick={remove}>
-                Delete
-              </Button>
-            </div>
-          )}
+            )}
+            <Button variant="ghost" className="text-alert hover:bg-terracotta-50" onClick={remove}>
+              Delete
+            </Button>
+          </div>
         </div>
       )}
     </div>

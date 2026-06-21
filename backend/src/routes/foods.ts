@@ -133,13 +133,11 @@ foodsRouter.put("/:id", async (req, res) => {
 });
 
 foodsRouter.delete("/:id", async (req, res) => {
-  const food = await assertFoodAccessible(req.params.id, req.user!.userId);
-  if (food.userId === null) {
-    throw new HttpError(403, "Shared foods cannot be deleted");
-  }
-  if (food.userId !== req.user!.userId) {
-    throw new HttpError(403, "You can only delete your own foods");
-  }
+  // assertFoodAccessible only resolves the user's own foods or shared/OFF
+  // foods, so any food the user can see here may be removed from the catalog.
+  // Foods still referenced by meal logs are protected by the FK constraint
+  // below and surface as a 409.
+  await assertFoodAccessible(req.params.id, req.user!.userId);
   try {
     await prisma.food.delete({ where: { id: req.params.id } });
   } catch {
